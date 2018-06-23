@@ -142,10 +142,10 @@ function QuestDeliveryAmount(){
 function QuestDischargeAmount(){
 	if($('#delivery_start_date').datebox('getValue')!=null&&$('#delivery_end_date').datebox('getValue')!=null&&$('#supply_co_delivery').combobox('getValue')!=null){
 		$.post(
-			"ajax/quest_delivery_amount_data",//请求的地址
+			"ajax/quest_discharge_amount_data",//请求的地址
 			{
-				"delivery_start_date":$('#discharge_start_date').datebox('getValue'),
-				"delivery_end_date":$('#discharge_end_date').datebox('getValue'),
+				"discharge_start_date":$('#discharge_start_date').datebox('getValue'),
+				"discharge_end_date":$('#discharge_end_date').datebox('getValue'),
 				"receive_co":$('#receive_co_discharge').combobox('getValue'),
 				"randomnumber":Math.random()+""
 			},//需要提交到请求地址的参数

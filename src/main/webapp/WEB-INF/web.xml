@@ -217,4 +217,26 @@
     <servlet-name>validationCode</servlet-name>
     <url-pattern>/ajax/validationCode</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>delete_name_data</servlet-name>
+    <servlet-class>sqlmanage.delete_name_data</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>delete_name_data</servlet-name>
+    <url-pattern>/ajax/delete_name_data</url-pattern>
+  </servlet-mapping>  <servlet>
+  <servlet-name>insert_name_data</servlet-name>
+  <servlet-class>sqlmanage.insert_name_data</servlet-class>
+</servlet>
+  <servlet-mapping>
+    <servlet-name>insert_name_data</servlet-name>
+    <url-pattern>/ajax/insert_name_data</url-pattern>
+  </servlet-mapping>  <servlet>
+  <servlet-name>quest_name_data</servlet-name>
+  <servlet-class>sqlmanage.quest_name_data</servlet-class>
+</servlet>
+  <servlet-mapping>
+    <servlet-name>quest_name_data</servlet-name>
+    <url-pattern>/ajax/quest_name_data</url-pattern>
+  </servlet-mapping>
 </web-app>

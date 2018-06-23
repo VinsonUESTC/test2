@@ -25,15 +25,7 @@ $(function(){
 });
 //初始化订单列表
 function InitForm(){
-	//读取单位，品名数据
-	$('#supply_co_form').combobox('loadData',supply_co_data);
-	$('#receive_co_form').combobox('loadData',receive_co_data);
-	$('#purchase_product_form').combobox('loadData',product_name_data);
-	$('#sale_product_form').combobox('loadData',product_name_data);
-	$('#receive_co_discharge').combobox('loadData',receive_co_data);
-	$('#supply_co_delivery').combobox('loadData',supply_co_data);
-	$('#receive_co_receive').combobox('loadData',receive_co_data);
-	$('#receive_co_pay').combobox('loadData',supply_co_data);
+    InitChoiceData();
 	//设置编号
 	hetonghao = "CGDD" + new Date().Format("yyyyMMddhhmmss");
 	sale_hetonghao = "XSDD" + new Date().Format("yyyyMMddhhmmss");

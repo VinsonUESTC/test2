@@ -1,13 +1,14 @@
 package sqlmanage;
-import java.io.IOException;
-import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 
-public class quest_discharge_amount_data extends HttpServlet {
+public class quest_name_data extends HttpServlet {
 	 /**
 	 * 
 	 */
@@ -16,18 +17,15 @@ public class quest_discharge_amount_data extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	        // 设置响应内容类型
 	        response.setContentType("text/html;charset=UTF-8");
-			String quest_discharge_amount_data = null;
+			String quest_delivery_data = null;
 			try {
-				String receive_co =request.getParameter("receive_co");
-				String start_discharge_date =request.getParameter("discharge_start_date");
-				String end_discharge_date =request.getParameter("discharge_end_date");
-				quest_discharge_amount_data = initialization.read_discharge_amounnt_data(start_discharge_date, end_discharge_date, receive_co);
+				String type =request.getParameter("type");
+				quest_delivery_data = initialization.read_name_data(type);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			String resultset = "{\"quest_discharge_amount_data\":"+quest_discharge_amount_data+"}";
-			response.getWriter().write(resultset);
+			response.getWriter().write(quest_delivery_data);
 	    }
 	    
 	    // 处理 POST 方法请求的方法

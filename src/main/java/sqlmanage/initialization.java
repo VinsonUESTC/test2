@@ -10,12 +10,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class initialization {
 
 	static String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	static String dbURL = "jdbc:sqlserver://127.0.0.1:1433;DatabaseName=test;useunicode=true;characterEncoding=UTF-8";
+	static String dbURL = "jdbc:sqlserver://127.0.0.1:1433;DatabaseName=test2;useunicode=true;characterEncoding=UTF-8";
 	static String userName = "test";
 	static String userPwd = "jyf123456";
 	public static void main(String[] args) throws SQLException {
-		ClearDataBase();
-		InitDataBase();
+		//ClearDataBase();
+		//InitDataBase();
 		//read_sale_order_data();
 		//read_purchase_order_data("22","text4");
 		//read_purchase_order_data("2017-12-1");
@@ -1021,12 +1021,12 @@ public class initialization {
 			Class.forName(driverName);  
 			conn = DriverManager.getConnection(dbURL, userName, userPwd );  
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT Discharge.discharge_amount, Discharge.boat_number FROM"
-					+ " ((Sale_Associate_Purchase INNER JOIN Sale_Order ON Sale_Associate_Purchase.sale_contract_number = Sale_Order.sale_contract_number)"
-					+ " INNER JOIN Allocate_Boat ON Sale_Associate_Purchase.purchase_contract_number = Allocate_Boat.purchase_contract_number) INNER JOIN"
-					+ " (Take_Delivery INNER JOIN Discharge ON Take_Delivery.take_delivery_order_number = Discharge.take_delivery_order_number) ON "
-					+ "Allocate_Boat.allocate_order_number = Take_Delivery.allocate_order_number WHERE (((Sale_Order.receive_co)='"+receive_co+"') AND ((Discharge.discharge_date) "
-					+ "Between '"+start_discharge_date+"' And '"+end_discharge_date+"')) GROUP BY Discharge.discharge_amount, Discharge.boat_number;");
+			ResultSet rs = stmt.executeQuery("SELECT Discharge.discharge_amount, Allocate_Boat.boat_number\n" +
+					"FROM (((Discharge INNER JOIN Take_Delivery ON Discharge.take_delivery_order_number = Take_Delivery.take_delivery_order_number) " +
+					"INNER JOIN Allocate_Boat ON Take_Delivery.allocate_order_number = Allocate_Boat.allocate_order_number) " +
+					"INNER JOIN Sale_Associate_Purchase ON Allocate_Boat.purchase_contract_number = Sale_Associate_Purchase.purchase_contract_number) " +
+					"INNER JOIN Sale_Order ON Sale_Associate_Purchase.sale_contract_number = Sale_Order.sale_contract_number\n" +
+					"WHERE (((Sale_Order.receive_co)='"+receive_co+"') AND (Discharge.discharge_date BETWEEN '"+start_discharge_date+"' AND '"+end_discharge_date+"'));");
 			while(rs.next()){
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("boat_number", rs.getString(1));
@@ -1071,7 +1071,104 @@ public class initialization {
  	   System.out.println(power);
         return power;
     }
-	
+
+	//读名称数据
+	public static String read_name_data(String type) throws SQLException
+	{
+		Connection conn = null;
+		@SuppressWarnings("rawtypes")
+		ArrayList<HashMap> list = new ArrayList<HashMap>();
+		ArrayList<HashMap> list2 = new ArrayList<HashMap>();
+		HashMap<String, ArrayList> total_list = new HashMap<String,ArrayList>();
+		Statement stmt = null;
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(dbURL, userName, userPwd );
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT [name]" +
+					"      ,[type]" +
+					"  FROM [test2].[dbo].[Names]" +
+					" WHERE [type] = '"+type+"'");
+			while(rs.next()){
+				HashMap<String, String> temp = new HashMap<String,String>();
+				HashMap<String, String> temp2 = new HashMap<String,String>();
+				temp.put("name", rs.getString(1));
+				temp2.put("id", rs.getString(1));
+				temp2.put("text", rs.getString(1));
+				list.add(temp);
+				list2.add(temp2);
+			}
+			total_list.put("name_data",list);
+			total_list.put("choice_data",list2);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}//end finally try
+		System.out.println(Object2JasonStr(total_list));
+		return Object2JasonStr(total_list);
+	}
+
+	//录入名称数据
+	public static int insert_name_data(String name, String type, String creater, String creatime)
+	{
+		Connection conn = null;
+		Statement stmt = null;
+		int lines = 0;
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(dbURL, userName, userPwd );
+			stmt = conn.createStatement();
+			lines =stmt.executeUpdate("INSERT INTO [test2].[dbo].[Names] VALUES ('"+name+"', '"+type+"', '"+creater+"', '"+creatime+"')");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					conn.close();
+			}catch(SQLException se){
+			}// do nothing
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}//end finally try
+		return lines;
+	}
+
+	//删除名称数据
+	public static int delete_name_data(String name, String type)
+	{
+		Connection conn = null;
+		Statement stmt = null;
+		int lines = 0;
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(dbURL, userName, userPwd );
+			stmt = conn.createStatement();
+			lines =stmt.executeUpdate("DELETE FROM [test2].[dbo].[Names] WHERE name = '"+name+"' AND type = '"+type+"'");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					conn.close();
+			}catch(SQLException se){
+			}// do nothing
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}
+		}//end finally try
+		return lines;
+	}
+
 	//对象能转换成JSON对象
 	public static String Object2JasonStr(Object obj) {
 		String re = "";

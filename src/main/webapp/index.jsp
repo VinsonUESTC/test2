@@ -2,10 +2,7 @@
 <%
 String power = (String)session.getAttribute("power");
 String username = (String)session.getAttribute("username");
-if(power==null){
-	response.sendRedirect("login.jsp");
-	return;
-}
+
  %>
 <html>
 	<head>
@@ -28,6 +25,7 @@ if(power==null){
 		<script type="text/javascript" src="page_js/allocate.js"></script>
 		<script type="text/javascript" src="page_js/order.js"></script>
 		<script type="text/javascript" src="page_js/loss.js"></script>
+        <script type="text/javascript" src="page_js/manage.js"></script>
 	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
 		<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
 	        <header>
@@ -63,6 +61,15 @@ if(power==null){
 						case 'receivables':
 							ReadReceiveTable();
 							break;
+                    case 'insert_supply':
+                        ReadNameTable('supply');
+                        break;
+                    case 'insert_receive':
+                        ReadNameTable('receive');
+                        break;
+                    case 'insert_product':
+                        ReadNameTable('product');
+                        break;
                     }
                 }
                 ">
@@ -82,6 +89,9 @@ if(power==null){
 	            <li value="quest_discharge">卸货查询</li>
 	            <li value="quest_receive">收款明细查询</li>
 	            <li value="quest_pay">付款明细查询</li>
+				<li value="insert_supply">供应商新增</li>
+				<li value="insert_receive">销售方新增</li>
+				<li value="insert_product">产品新增</li>
 	        </ul>
 		</div>
 	
@@ -573,7 +583,7 @@ if(power==null){
 				<input class="easyui-textbox" label="船号：" id="take_delivery_boat_number"  prompt="请输入船号" data-options="required:true" style="width:70%">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestTakeDelivery()">查询</a>
 			</div>
-			<table id="take_delivery_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+			<table id="take_delivery_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:70%;"  rownumbers="true" pagination="true">
 				<thead>
 					<tr>
 						<th field="allocate_order_number" >分配单号</th>
@@ -649,7 +659,7 @@ if(power==null){
 				<input class="easyui-textbox" label="船号：" id="discharge_boat_number"  prompt="请输入船号" data-options="required:true" style="width:70%">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestDischarge()">查询</a>
 			</div>
-			<table id="discharge_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+			<table id="discharge_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:70%;"  rownumbers="true" pagination="true">
 				<thead>
 					<tr>
 						<th field="take_delivery_order_number">出库单号</th>
@@ -767,28 +777,28 @@ if(power==null){
 		   			minimizable:false,
 		   			maximizable:false
 		  		" style="width:90%;height:auto;padding:0px;">
-			  		<header>
-						<div class="m-toolbar">
-							<div class="m-title">收款表</div>
-						</div>
-					</header>
-		  			<div style="margin:10px">
-						<input class="easyui-datebox" label="收款日期：" id="receive_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30" style="width:100%">
+				<header>
+					<div class="m-toolbar">
+						<div class="m-title">收款表</div>
 					</div>
-					<div style="margin:10px">
-						<input id="receive_amount" class="easyui-numberbox" label="收款金额：" prompt="请输入金额" prefix="￥"   data-options="min:0,precision:2,required:true"  style="width:100%">
-					</div>
-					<div style="margin:10px">
-						<select id="receive_method" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择收款方式" label="收款方式：" style="width:100%">
-							<option value="现金">现金</option>
-							<option value="承兑">承兑</option>
-						</select>
-					</div>
-			    	<div style="text-align:center;padding:5px">
-		  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickReceive('cash')">确认</a>
-		  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#receive_window').window('close');">关闭</a>
-			    	</div>
-			    </div>
+				</header>
+				<div style="margin:10px">
+					<input class="easyui-datebox" label="收款日期：" id="receive_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30" style="width:100%">
+				</div>
+				<div style="margin:10px">
+					<input id="receive_amount" class="easyui-numberbox" label="收款金额：" prompt="请输入金额" prefix="￥"   data-options="min:0,precision:2,required:true"  style="width:100%">
+				</div>
+				<div style="margin:10px">
+					<select id="receive_method" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择收款方式" label="收款方式：" style="width:100%">
+						<option value="现金">现金</option>
+						<option value="承兑">承兑</option>
+					</select>
+				</div>
+				<div style="text-align:center;padding:5px">
+					<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickReceive('cash')">确认</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#receive_window').window('close');">关闭</a>
+				</div>
+			</div>
 			<div id="submit_receive_alert" class="easyui-window" title="提示" 
 		   		data-options="
 		   			modal:true,
@@ -976,27 +986,144 @@ if(power==null){
 				</thead>
 			</table>
 		</div>
-		
+
+		<!-- 新增供应商 -->
+		<div id="insert_supply"class="easyui-navpanel" style="position:relative;">
+			<header>
+				<div class="m-toolbar">
+					<div id="insert_supply_title" class="m-title"></div>
+					<div class="m-left">
+						<a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+					</div>
+				</div>
+			</header>
+			<table id="supply_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+				<thead>
+				<tr>
+					<th field="name">供应商名称</th>
+				</tr>
+				</thead>
+			</table>
+			<div id="tb" style="height:auto;">
+				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('supply')">增加供应商</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('supply')">删除供应商</a>
+			</div>
+		</div>
+		<div id="insert_supply_window" class="easyui-window"
+			 data-options="
+		   			modal:true,
+		   			closed:true,
+		   			collapsible:false,
+		   			minimizable:false,
+		   			maximizable:false
+		  		" style="width:90%;height:auto;padding:0px;">
+			<header>
+				<div class="m-toolbar">
+					<div class="m-title">新增供应商</div>
+				</div>
+			</header>
+			<div style="margin:10px">
+				<input id="supply_name" class="easyui-textbox" label="供应商名称：" prompt="请输入供应商名称" data-options="required:true"  style="width:100%">
+			</div>
+			<div style="text-align:center;padding:5px">
+				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsert('supply')">确认</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_supply_window').window('close');">关闭</a>
+			</div>
+		</div>
+
+
+        <!-- 新增收货方 -->
+        <div id="insert_receive"class="easyui-navpanel" style="position:relative;">
+            <header>
+                <div class="m-toolbar">
+                    <div id="insert_receive_title" class="m-title"></div>
+                    <div class="m-left">
+                        <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+                    </div>
+                </div>
+            </header>
+            <table id="receive_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb2',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+                <thead>
+                <tr>
+                    <th field="name">收货方名称</th>
+                </tr>
+                </thead>
+            </table>
+            <div id="tb2" style="height:auto;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('receive')">增加收货方</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('receive')">删除收货方</a>
+            </div>
+        </div>
+        <div id="insert_receive_window" class="easyui-window"
+             data-options="
+		   			modal:true,
+		   			closed:true,
+		   			collapsible:false,
+		   			minimizable:false,
+		   			maximizable:false
+		  		" style="width:90%;height:auto;padding:0px;">
+            <header>
+                <div class="m-toolbar">
+                    <div class="m-title">新增收货方</div>
+                </div>
+            </header>
+            <div style="margin:10px">
+                <input id="receive_name" class="easyui-textbox" label="收货方名称：" prompt="请输入收货方名称" data-options="required:true"  style="width:100%">
+            </div>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsert('receive')">确认</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_receive_window').window('close');">关闭</a>
+            </div>
+        </div>
+
+
+        <!-- 新增产品 -->
+        <div id="insert_product"class="easyui-navpanel" style="position:relative;">
+            <header>
+                <div class="m-toolbar">
+                    <div id="insert_product_title" class="m-title"></div>
+                    <div class="m-left">
+                        <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+                    </div>
+                </div>
+            </header>
+            <table id="product_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb3',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+                <thead>
+                <tr>
+                    <th field="name">产品名称</th>
+                </tr>
+                </thead>
+            </table>
+            <div id="tb3" style="height:auto;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('product')">增加产品</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('product')">删除产品</a>
+            </div>
+        </div>
+        <div id="insert_product_window" class="easyui-window"
+             data-options="
+		   			modal:true,
+		   			closed:true,
+		   			collapsible:false,
+		   			minimizable:false,
+		   			maximizable:false
+		  		" style="width:90%;height:auto;padding:0px;">
+            <header>
+                <div class="m-toolbar">
+                    <div class="m-title">新增产品</div>
+                </div>
+            </header>
+            <div style="margin:10px">
+                <input id="product_name" class="easyui-textbox" label="产品名称：" prompt="请输入产品名称" data-options="required:true"  style="width:100%">
+            </div>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsert('product')">确认</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_product_window').window('close');">关闭</a>
+            </div>
+        </div>
+
+
 	</body>
 	<script type="text/javascript">
-	var supply_co_data = [{
-	    "id":"泰州梅兰化工有限公司",
-	    "text":"泰州梅兰化工有限公司"
-	},{
-	    "id":"江苏大和氯碱化工有限公司",
-	    "text":"江苏大和氯碱化工有限公司"
-	},{
-	    "id":"江苏海兴化工有限公司",
-	    "text":"江苏海兴化工有限公司",
-	}];
-	var receive_co_data = [{
-	    "id":"阜宁澳洋科技股份有限公司",
-	    "text":"阜宁澳洋科技股份有限公司"
-	}];
-	var product_name_data = [{
-	    "id":"液碱（32%）",
-	    "text":"液碱（32%）"
-	}];
 		$(function(){
 			InitForm();
 			var date_month = null;
