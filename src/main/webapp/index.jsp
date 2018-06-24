@@ -58,15 +58,6 @@ String username = (String)session.getAttribute("username");
 						case 'receivables':
 							ReadReceiveTable();
 							break;
-                    case 'insert_supply':
-                        ReadNameTable('supply');
-                        break;
-                    case 'insert_receive':
-                        ReadNameTable('receive');
-                        break;
-                    case 'insert_product':
-                        ReadNameTable('product');
-                        break;
                     }
                 }
                 ">
@@ -89,6 +80,9 @@ String username = (String)session.getAttribute("username");
 				<li value="insert_supply">供应商新增</li>
 				<li value="insert_receive">销售方新增</li>
 				<li value="insert_product">产品新增</li>
+                <li value="insert_boat">船只新增</li>
+                <li value="take_delivery_history">提货记录</li>
+                <li value="discharge_history">卸货记录</li>
 	        </ul>
 		</div>
 	
@@ -380,9 +374,9 @@ String username = (String)session.getAttribute("username");
 						<thead>
 							<tr>
 								<th field="purchase_order_number" >采购订单号</th>
-                                <th field="orders_date" >采购日期</th>
                                 <th field="supply_co" >供应商</th>
 								<th field="total_price" data-options="formatter:fmoney">总金额</th>
+                                <th field="orders_date" >采购日期</th>
 								<th field="creater" >创建人</th>
                                 <th field="createtime" >创建时间</th>
 							</tr>
@@ -454,7 +448,9 @@ String username = (String)session.getAttribute("username");
 						<thead>
 							<tr>
                                 <th field="purchase_order_number" >采购订单号</th>
+                                <th field="supply_co" >供应商</th>
                                 <th field="total_price" data-options="formatter:fmoney">总金额</th>
+                                <th field="orders_date" >采购日期</th>
                                 <th field="creater" >创建人</th>
                                 <th field="createtime" >创建时间</th>
 							</tr>
@@ -548,7 +544,7 @@ String username = (String)session.getAttribute("username");
 					<input class="easyui-textbox" label="分配单号：" id="allocate_order_number" data-options="readonly:true" style="width:100%">
 				</div>
 	  			<div style="margin:10px">
-					<input class="easyui-textbox" label="船号：" id="boat_number"  prompt="请输入船号" data-options="required:true" style="width:100%">
+                    <select class="easyui-combobox" label="船号：" id="boat_number"  prompt="请选择船号" data-options="valueField:'id',textField:'text',required:true" style="width:100%"></select>
 				</div>
 				<div style="margin:10px">
 					<input id="allocate_amount_form" class="easyui-numberbox" label="分配数量：" prompt="请输入数量" data-options="min:0,precision:0,required:true"  style="width:100%">
@@ -612,10 +608,6 @@ String username = (String)session.getAttribute("username");
                 	</div>
 				</div>
 			</header>
-			<div style="text-align:center;padding:5px">
-				<input class="easyui-textbox" label="船号：" id="take_delivery_boat_number"  prompt="请输入船号" data-options="required:true" style="width:70%">
-				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestTakeDelivery()">查询</a>
-			</div>
 			<table id="take_delivery_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:70%;"  rownumbers="true" pagination="true">
 				<thead>
 					<tr>
@@ -644,16 +636,16 @@ String username = (String)session.getAttribute("username");
 					</div>
 				</header>
 	  			<div style="margin:10px">
-					<input class="easyui-textbox" label="船号：" id="boat_number_take_delivery"  prompt="请输入船号" data-options="readonly:true" style="width:100%">
+					<input class="easyui-textbox" label="船号：" id="take_delivery_boat_number"  prompt="请输入船号" data-options="readonly:true" style="width:100%">
 				</div>
 				<div style="margin:10px">
 					<input class="easyui-textbox" label="出库单号："  prompt="请输入出库单号"  id="take_delivery_order_number" data-options="required:true" style="width:100%">
 				</div>
 				<div style="margin:10px">
-					<input class="easyui-datebox" label="提货日期：" id="take_delivery_date"  prompt="请选择提货日期" data-options="required:true" style="width:100%">
+					<input class="easyui-datebox" label="提货日期：" id="take_delivery_date"  data-options="readonly:true" style="width:100%">
 				</div>
 				<div style="margin:10px">
-					<input id="take_delivery_amount" class="easyui-numberbox" label="提货数量：" prompt="请输入数量" data-options="min:0,precision:0,required:true"  style="width:100%">
+					<input id="take_delivery_amount" class="easyui-numberbox" label="提货数量：" prompt="请输入数量" data-options="min:0,precision:3,required:true"  style="width:100%">
 				</div>
 		    	<div style="text-align:center;padding:5px">
 	  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickDelivery()">确认</a>
@@ -688,10 +680,6 @@ String username = (String)session.getAttribute("username");
                 	</div>
 				</div>
 			</header>
-			<div style="text-align:center;padding:5px">
-				<input class="easyui-textbox" label="船号：" id="discharge_boat_number"  prompt="请输入船号" data-options="required:true" style="width:70%">
-				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestDischarge()">查询</a>
-			</div>
 			<table id="discharge_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:70%;"  rownumbers="true" pagination="true">
 				<thead>
 					<tr>
@@ -720,16 +708,16 @@ String username = (String)session.getAttribute("username");
 					</div>
 				</header>
 	  			<div style="margin:10px">
-					<input class="easyui-textbox" label="船号：" id="boat_number_discharge"  prompt="请输入船号" data-options="readonly:true" style="width:100%">
+					<input class="easyui-textbox" label="船号：" id="discharge_boat_number"  prompt="请输入船号" data-options="readonly:true" style="width:100%">
 				</div>
 				<div style="margin:10px">
 					<input class="easyui-textbox" label="入库单号："  prompt="请输入入库单号"  id="discharge_order_number" data-options="required:true" style="width:100%">
 				</div>
 				<div style="margin:10px">
-					<input class="easyui-datebox" label="卸货日期：" id="discharge_date"  prompt="请选择卸货日期" data-options="required:true" style="width:100%">
+					<input class="easyui-datebox" label="卸货日期：" id="discharge_date"  prompt="请选择卸货日期" data-options="readonly:true" style="width:100%">
 				</div>
 				<div style="margin:10px">
-					<input id="discharge_amount" class="easyui-numberbox" label="卸货数量：" prompt="请输入数量" data-options="min:0,precision:0,required:true"  style="width:100%">
+					<input id="discharge_amount" class="easyui-numberbox" label="卸货数量：" prompt="请输入数量" data-options="min:0,precision:3,required:true"  style="width:100%">
 				</div>
 		    	<div style="text-align:center;padding:5px">
 	  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickDischarge()">确认</a>
@@ -773,7 +761,7 @@ String username = (String)session.getAttribute("username");
 					<tr>
 						<th field="boat_number" >船号</th>
 						<th field="loss_amount" >损耗数量</th>
-						<th field="loss_rate" >损耗比例</th>
+						<th field="loss_rate" data-options="formatter:fpercent">损耗比例</th>
 					</tr>
 				</thead>
 			</table>
@@ -1154,10 +1142,97 @@ String username = (String)session.getAttribute("username");
             </div>
         </div>
 
+        <!-- 新增船只 -->
+        <div id="insert_boat"class="easyui-navpanel" style="position:relative;">
+            <header>
+                <div class="m-toolbar">
+                    <div id="insert_boat_title" class="m-title"></div>
+                    <div class="m-left">
+                        <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+                    </div>
+                </div>
+            </header>
+            <table id="boat_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb4',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+                <thead>
+                <tr>
+                    <th field="boat_name">船只名称</th>
+                    <th field="boat_manager">船只管理员</th>
+                </tr>
+                </thead>
+            </table>
+            <div id="tb4" style="height:auto;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('boat')">增加船只</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('boat')">删除船只</a>
+            </div>
+        </div>
+        <div id="insert_boat_window" class="easyui-window"
+             data-options="
+		   			modal:true,
+		   			closed:true,
+		   			collapsible:false,
+		   			minimizable:false,
+		   			maximizable:false
+		  		" style="width:90%;height:auto;padding:0px;">
+            <header>
+                <div class="m-toolbar">
+                    <div class="m-title">新增船只</div>
+                </div>
+            </header>
+            <div style="margin:10px">
+                <input id="boat_name" class="easyui-textbox" label="船只名称：" prompt="请输入船只名称" data-options="required:true"  style="width:100%">
+                <input id="boat_manager" class="easyui-textbox" label="船只人员：" prompt="请输入船只人员姓名" data-options="required:true"  style="width:100%">
+            </div>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsertboat()">确认</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_boat_window').window('close');">关闭</a>
+            </div>
+        </div>
 
+        <!-- 提货记录查询 -->
+        <div id="take_delivery_history"class="easyui-navpanel" style="position:relative;">
+            <header>
+                <div class="m-toolbar">
+                    <div id="take_delivery_history_title" class="m-title"></div>
+                    <div class="m-left">
+                        <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+                    </div>
+                </div>
+            </header>
+            <table id="quest_take_delivery_history_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+                <thead>
+                <tr>
+                    <th field="take_delivery_number">出库单号</th>
+                    <th field="take_delivery_date" >提货日期</th>
+                    <th field="take_delivery_amount">提货数量</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+        <!-- 卸货记录查询 -->
+        <div id="discharge_history"class="easyui-navpanel" style="position:relative;">
+            <header>
+                <div class="m-toolbar">
+                    <div id="discharge_history_title" class="m-title"></div>
+                    <div class="m-left">
+                        <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+                    </div>
+                </div>
+            </header>
+            <table id="quest_discharge_history_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+                <thead>
+                <tr>
+                    <th field="discharge_number">入库单号</th>
+                    <th field="discharge_date" >卸货日期</th>
+                    <th field="discharge_amount">卸货数量</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
 	</body>
 	<script type="text/javascript">
 		$(function(){
+            var user = window.sessionStorage.getItem("username");
 			InitForm();
 			var date_month = null;
 		});

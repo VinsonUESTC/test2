@@ -84,11 +84,11 @@ function QuestsaleOrder(){
 }
 
 //查询提货函数
-function QuestTakeDelivery(){
+function QuestTakeDelivery(boatnumber){
 	$.post(
 		"ajax/quest_delivery_data",//请求的地址
 		{
-			"boat_number":$('#take_delivery_boat_number').textbox('getValue'),
+			"boat_number":boatnumber,
 			"randomnumber":Math.random()+""
 		},//需要提交到请求地址的参数
 		function( returnedString )     //回调
@@ -101,11 +101,11 @@ function QuestTakeDelivery(){
 }
 
 //查询卸货函数
-function QuestDischarge(){
+function QuestDischarge(boatnumber){
 	$.post(
 		"ajax/quest_discharge_data",//请求的地址
 		{
-			"boat_number":$('#discharge_boat_number').textbox('getValue'),
+			"boat_number":boatnumber,
 			"randomnumber":Math.random()+""
 		},//需要提交到请求地址的参数
 		function( returnedString )     //回调

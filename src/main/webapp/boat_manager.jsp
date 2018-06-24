@@ -23,6 +23,7 @@ if(power==null){
 		<script type="text/javascript" src="page_js/pay.js"></script>
 		<script type="text/javascript" src="page_js/quest.js"></script>
 		<script type="text/javascript" src="page_js/delivery.js"></script>
+		<script type="text/javascript" src="page_js/manage.js"></script>
 	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-1" data-genuitec-path="/test2/WebRoot/boat_manager.jsp">
 		<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-1" data-genuitec-path="/test2/WebRoot/boat_manager.jsp">
 	        <header>

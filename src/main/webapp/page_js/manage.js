@@ -33,12 +33,42 @@ function ClickInsert(type) {
     );
 }
 
+//点击新增船只确认
+function ClickInsertboat() {
+    $.post(
+        "ajax/insert_boat_name_data",//请求的地址
+        {
+            "boat_name":$("#boat_name").textbox('getValue'),
+            "boat_manager" : $("#boat_manager").textbox('getValue'),
+            "creater":document.getElementById("usertitle").innerHTML.substring(3),
+            "createtime":new Date().Format("yyyy-MM-dd hh:mm:ss") ,
+            "randomnumber":Math.random()+""
+        },//需要提交到请求地址的参数
+        function( returnedString )     //回调
+        {
+            var data = returnedString;
+            var jsonObj = eval("("+data+")");
+            if(jsonObj.i=='0'){
+                alert('提交错误！');
+            }else{
+                alert('提交成功！');
+            };
+            $("#insert_boat_window").window('close');
+            ReadBoatNameTable();
+        }
+    );
+}
+
 //点击删除按钮
 function remove(type) {
     if($("#"+type+"_name_table").datagrid('getSelected')==null){
         alert('请选择一行数据！');
     }else{
-    	SubmitDelete($("#"+type+"_name_table").datagrid('getSelected').name,type);
+        if(type=="boat"){
+            SubmitBoatDelete($("#" + type + "_name_table").datagrid('getSelected').boat_name,$("#" + type + "_name_table").datagrid('getSelected').boat_manager)
+        }else {
+            SubmitDelete($("#" + type + "_name_table").datagrid('getSelected').name,type );
+        }
 	}
 }
 
@@ -61,6 +91,29 @@ function SubmitDelete(value,type) {
                 alert('删除成功！');
             };
             ReadNameTable(type);
+        }
+    );
+}
+
+//删除船只数据
+function SubmitBoatDelete(boat_name,boat_manager) {
+    $.post(
+        "ajax/delete_boat_name_data",//请求的地址
+        {
+            "boat_name":boat_name,
+            "boat_manager":boat_manager,
+            "randomnumber":Math.random()+""
+        },//需要提交到请求地址的参数
+        function( returnedString )     //回调
+        {
+            var data = returnedString;
+            var jsonObj = eval("("+data+")");
+            if(jsonObj.i=='0'){
+                alert('删除错误！');
+            }else{
+                alert('删除成功！');
+            };
+            ReadBoatNameTable();
         }
     );
 }
@@ -102,9 +155,28 @@ function ReadNameTable(type) {
     );
 }
 
+//读取船只表格数据
+function ReadBoatNameTable() {
+    $.post(
+        "ajax/quest_boat_name_data",//请求的地址
+        {
+            "randomnumber":Math.random()+""
+        },//需要提交到请求地址的参数
+        function( returnedString )     //回调
+        {
+            var data = returnedString;
+            var jsonObj = eval("("+data+")");
+            $("#boat_name_table").datagrid('loadData',jsonObj.name_data);
+            $("#boat_number").combobox('loadData',jsonObj.choice_data);
+        }
+    );
+}
+
+
 //初始化下拉框数据
 function InitChoiceData() {
     ReadNameTable('supply');
     ReadNameTable('receive');
     ReadNameTable('product');
+    ReadBoatNameTable();
 }

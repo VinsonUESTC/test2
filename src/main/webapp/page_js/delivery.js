@@ -8,7 +8,7 @@ function DischargeConfirm(){
 	}else{
 		$('#discharge_window').window('center');
 		$('#discharge_window').window('open');
-		$('#boat_number_discharge').textbox('setValue',$('#discharge_boat_number').textbox('getValue'));
+		$('#discharge_date').datebox('setValue',new Date().Format("yyyy-MM-dd"));
 	}
 }
 
@@ -53,11 +53,11 @@ function SubmitDischarge(){
 			{
 				var data = returnedString;
 				var jsonObj = eval("("+data+")");
-				if(jsonObj.i>0){
+				if(jsonObj.i=='1'){
 					alert('提交成功！');
-					QuestDischarge();
+                    InitTransportData();
 				}else{
-					alert('提交失败！');
+					alert('提交失败，单号重复！');
 				}
 			}
 	);
@@ -76,7 +76,7 @@ function TakeDeliveryConfirm(){
 	}else{
 		$('#take_delivery_window').window('center');
 		$('#take_delivery_window').window('open');
-		$('#boat_number_take_delivery').textbox('setValue',$('#take_delivery_boat_number').textbox('getValue'));
+        $('#take_delivery_date').datebox('setValue',new Date().Format("yyyy-MM-dd"));
 	}
 }
 
@@ -85,8 +85,8 @@ function ClickDelivery(){
 	if($('#take_delivery_order_number').textbox('getValue')!=""){
 		if($('#take_delivery_date').datebox('getValue')!=""){
 			if($('#take_delivery_amount').numberbox('getValue')!=""){
-				if($('#take_delivery_amount').numberbox('getValue')-$('#take_delivery_table').datagrid('getSelected').allocate_amount>0){
-					alert('提货数量大于分配数量！');
+				if($('#take_delivery_amount').numberbox('getValue')-$('#take_delivery_table').datagrid('getSelected').allocate_amount>5){
+					alert('提货数量大于分配数量5！');
 					$('#take_delivery_amount').numberbox('clear');
 				}else{
 					$('#submit_delivery_alert').window('center');
@@ -121,11 +121,11 @@ function SubmitDelivery(){
 			{
 				var data = returnedString;
 				var jsonObj = eval("("+data+")");
-				if(jsonObj.i>0){
+				if(jsonObj.i=='1'){
 					alert('提交成功！');
-					QuestTakeDelivery();
+                    InitTransportData();
 				}else{
-					alert('提交失败！');
+					alert('提交失败，单号重复！');
 				}
 			}
 	);
@@ -134,4 +134,29 @@ function SubmitDelivery(){
 	$('#take_delivery_amount').textbox('clear');
 	$('#submit_delivery_alert').window('close');
 	$('#take_delivery_window').window('close');
+}
+
+//点击提货触发事件
+function InitTransportData() {
+    $.post(
+        "ajax/quest_boat_manager_data",//请求的地址
+        {
+            "username":window.sessionStorage.getItem("username"),
+            "randomnumber":Math.random()+""
+        },//需要提交到请求地址的参数
+        function( returnedString )     //回调
+        {
+            var data = returnedString;
+            var jsonObj = eval("("+data+")");
+            console.log(jsonObj.boat_name);
+            if(jsonObj.boat_name==''||jsonObj.boat_name==undefined){
+                alert('未设置船号，请联系船经理！');
+            }else{
+                QuestTakeDelivery(jsonObj.boat_name);
+                QuestDischarge(jsonObj.boat_name);
+                $('#take_delivery_boat_number').textbox('setValue',jsonObj.boat_name);
+                $('#discharge_boat_number').textbox('setValue',jsonObj.boat_name);
+            }
+        }
+    );
 }

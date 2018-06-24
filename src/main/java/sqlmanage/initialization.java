@@ -14,8 +14,8 @@ public class initialization {
 	static String userName = "test";
 	static String userPwd = "jyf123456";
 	public static void main(String[] args) throws SQLException {
-		//ClearDataBase();
-		//InitDataBase();
+		ClearDataBase();
+		InitDataBase();
 		//read_sale_order_data();
 		//read_purchase_order_data("22","text4");
 		//read_purchase_order_data("2017-12-1");
@@ -144,7 +144,7 @@ public class initialization {
 				+ "allocate_order_number nvarchar(50) NOT NULL ,"
 				+ "boat_number nvarchar(50) NOT NULL ,"
 				+ "take_delivery_date date NOT NULL,"
-				+ "delivery_amount int NOT NULL,"
+				+ "delivery_amount float NOT NULL,"
 				+ "creater nvarchar(50) NOT NULL,"
 				+ "create_time datetime NOT NULL"
 				+ ")");
@@ -155,10 +155,26 @@ public class initialization {
 				+ "take_delivery_order_number nvarchar(50) NOT NULL UNIQUE,"
 				+ "boat_number nvarchar(50) NOT NULL ,"
 				+ "discharge_date date NOT NULL,"
-				+ "discharge_amount int NOT NULL,"
+				+ "discharge_amount float NOT NULL,"
 				+ "creater nvarchar(50) NOT NULL,"
 				+ "create_time datetime NOT NULL"
 				+ ")");
+        //创建名称表格
+        CreateTables("test2","Names","CREATE TABLE Names"
+                + "("
+                + "name nvarchar(50) NOT NULL UNIQUE,"
+                + "type nvarchar(50) NOT NULL ,"
+                + "creater nvarchar(50) NOT NULL,"
+                + "create_time datetime NOT NULL"
+                + ")");
+        //创建船只名称表格
+        CreateTables("test2","BoatNames","CREATE TABLE BoatNames"
+                + "("
+                + "boat_name nvarchar(50) NOT NULL UNIQUE,"
+                + "boat_manager nvarchar(50) NOT NULL UNIQUE,"
+                + "creater nvarchar(50) NOT NULL,"
+                + "create_time datetime NOT NULL"
+                + ")");
 	}
 	
 	public static void CreateTables(String BaseName ,String TableName ,String sql){
@@ -581,7 +597,7 @@ public class initialization {
 			conn = DriverManager.getConnection(dbURL, userName, userPwd );  
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM [test2].[dbo].[Receivables]	"
-					+ "WHERE [receivables_time] BETWEEN '"+start_receivables_date+"' AND '"+end_receivables_date+"' AND [supply_co] = '"+receive_co+"'");
+					+ "WHERE [receivables_time] BETWEEN '"+start_receivables_date+"' AND '"+end_receivables_date+"' AND [receive_co] = '"+receive_co+"'");
 			while(rs.next()){
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("receivables_time", rs.getString(2));
@@ -689,7 +705,7 @@ public class initialization {
 					+ "ON Allocate_Boat.purchase_contract_number = Sale_Associate_Purchase.purchase_contract_number "
 					+ "WHERE Allocate_Boat.boat_number = '"+boat_number+"';");
 			while(rs.next()){
-				int deliveried_amount =0;
+				float deliveried_amount =0;
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("allocate_order_number", rs.getString(1));
 				temp.put("supply_co", rs.getString(3));
@@ -700,10 +716,10 @@ public class initialization {
 						+ "WHERE [allocate_order_number] = '"+rs.getString(1)+"'"
 						+ "AND  [boat_number] ='"+boat_number+"'");
 				while(rs2.next()){
-					deliveried_amount +=rs2.getInt(1);
+					deliveried_amount +=rs2.getFloat(1);
 				}
-				temp.put("allocate_amount", String.valueOf(rs.getInt(2)-deliveried_amount));
-				if(rs.getInt(2)-deliveried_amount>deliveried_amount)
+				temp.put("allocate_amount", String.valueOf(rs.getFloat(2)-deliveried_amount));
+				if(rs.getFloat(2)-deliveried_amount>100)
 					list.add(temp);
 			}
 		}catch (Exception e) {
@@ -735,20 +751,20 @@ public class initialization {
 					+ "Take_Delivery.allocate_order_number = Allocate_Boat.allocate_order_number "
 					+ "WHERE Take_Delivery.boat_number = '"+boat_number+"';");
 			while(rs.next()){
-				int discharged_amount = 0;
+				float discharged_amount = 0;
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("take_delivery_order_number", rs.getString(1));
 				temp.put("supply_co", rs.getString(3));
 				temp.put("receive_co", rs.getString(4));
 				temp.put("take_delivery_date", rs.getString(5));
+                temp.put("delivery_amount", String.valueOf(rs.getFloat(2)));
 				Statement stmt2 = conn.createStatement();
 				ResultSet rs2 = stmt2.executeQuery("SELECT [discharge_amount] FROM [test2].[dbo].[Discharge]"
 						+ "WHERE [take_delivery_order_number] = '"+rs.getString(1)+"'"
 						+ " AND  [boat_number] ='"+boat_number+"'");
 				while(rs2.next()){
-					discharged_amount += rs2.getInt(1);
+					discharged_amount += rs2.getFloat(1);
 				}
-				temp.put("delivery_amount", String.valueOf(rs.getInt(2)-discharged_amount));
 				if(discharged_amount==0)
 				list.add(temp);
 			}
@@ -795,15 +811,12 @@ public class initialization {
 				temp.put("createtime", rs.getString(7));
 				list.add(temp);
 			}
-			rs = stmt.executeQuery("SELECT Sum(Take_Delivery.delivery_amount) AS delivery_amount之合计, \n" +
-					"Purchase_Order.purchase_contract_number, Purchase_Order.purchase_singleprice\n" +
-					"FROM Payment, Purchase_Order INNER JOIN (Allocate_Boat INNER JOIN Take_Delivery \n" +
-					"ON Allocate_Boat.allocate_order_number = Take_Delivery.allocate_order_number) \n" +
-					"ON Purchase_Order.purchase_contract_number = Allocate_Boat.purchase_contract_number\n" +
-					"WHERE (((Purchase_Order.supply_co)='"+supply_co+"') AND Purchase_Order.payment_method = '"+type+"')\n" +
-					"GROUP BY Purchase_Order.purchase_contract_number, Purchase_Order.purchase_singleprice;\n");
+			rs = stmt.executeQuery("SELECT Sum(Take_Delivery.delivery_amount) AS delivery_amount之合计, Purchase_Order.purchase_singleprice, Purchase_Order.purchase_contract_number\n" +
+					"FROM Purchase_Order INNER JOIN (Allocate_Boat INNER JOIN Take_Delivery ON Allocate_Boat.allocate_order_number = Take_Delivery.allocate_order_number) ON Purchase_Order.purchase_contract_number = Allocate_Boat.purchase_contract_number\n" +
+					"WHERE (((Purchase_Order.supply_co)='"+supply_co+"') AND ((Purchase_Order.payment_method)='"+type+"'))\n" +
+					"GROUP BY Purchase_Order.purchase_singleprice, Purchase_Order.purchase_contract_number;");
 			while (rs.next()){
-				total_used+=rs.getFloat(1)*rs.getFloat(3);
+				total_used+=rs.getFloat(1)*rs.getFloat(2);
 			}
 			rs = stmt.executeQuery("SELECT Sum([payment_amount]) AS payment_amount之合计"
 					+ " FROM [dbo].[Payment]"
@@ -812,6 +825,8 @@ public class initialization {
 			while (rs.next()) {
 				money_paid+=rs.getFloat(1);
 			}
+			System.out.println(money_paid);
+			System.out.println(total_used);
 			result.put("money_left",String.valueOf(money_paid-total_used));
 			result.put("payment_table_data", list);
 		}catch (Exception e) {
@@ -906,8 +921,8 @@ public class initialization {
 			while(rs.next()){
 				float money_paid = 0;
 				float money_allocated = 0;
-				int amount_allocated = 0;
-				int amount_left = 0;
+				float amount_allocated = 0;
+				float amount_left = 0;
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("purchase_contract_number", rs.getString(1));
 				temp.put("receive_co", rs.getString(2));
@@ -931,7 +946,7 @@ public class initialization {
 						+ "INNER JOIN Purchase_Order ON Allocate_Boat.purchase_contract_number = Purchase_Order.purchase_contract_number "
 						+ "WHERE Purchase_Order.purchase_contract_number = '"+rs.getString(1)+"'");
 				while(rs3.next()){
-					amount_allocated +=rs3.getInt(1);  //获取已分配总量（按合同编号）
+					amount_allocated +=rs3.getFloat(1);  //获取已分配总量（按合同编号）
 				}
 				ResultSet rs4 = stmt4.executeQuery("SELECT Allocate_Boat.purchase_contract_number, Sum(Allocate_Boat.allocate_amount) AS allocate_amount之合计, Purchase_Order.purchase_singleprice "
 						+ "FROM Allocate_Boat INNER JOIN Purchase_Order ON Allocate_Boat.purchase_contract_number = Purchase_Order.purchase_contract_number "
@@ -942,10 +957,10 @@ public class initialization {
 					money_allocated += rs4.getFloat(2)*rs4.getFloat(3);  //获取已经分配总金额
 				}
 				float money_left = money_paid-money_allocated;  //余款
-				if((money_left/rs.getFloat(5))-(rs.getInt(4)-amount_allocated)>0){
-					amount_left = rs.getInt(4)-amount_allocated;
+				if((money_left/rs.getFloat(5))-(rs.getFloat(4)-amount_allocated)>0){
+					amount_left = rs.getFloat(4)-amount_allocated;
 				}else{
-					amount_left = (int) (money_left/rs.getFloat(5));
+					amount_left = (float) (money_left/rs.getFloat(5));
 				}
 				temp.put("amount_left", String.valueOf(amount_left));
 				//temp.put("money_left", String.valueOf((float)(Math.round(money_left*100/100))));
@@ -981,7 +996,7 @@ public class initialization {
 			while(rs.next()){
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("boat_number", rs.getString(1));
-				temp.put("loss_amount", String.valueOf(rs.getInt(2)-rs.getInt(3)));
+				temp.put("loss_amount", String.valueOf(rs.getFloat(2)-rs.getFloat(3)));
 				float loss_amount = rs.getFloat(2)-rs.getFloat(3);
 				float loss_rate = (loss_amount/rs.getFloat(2))*100;
 				temp.put("loss_rate", String.valueOf(loss_rate)+"%");
@@ -1127,6 +1142,69 @@ public class initialization {
 		return Object2JasonStr(total_list);
 	}
 
+    //读船只名称数据
+    public static String read_boat_name_data() throws SQLException
+    {
+        Connection conn = null;
+        @SuppressWarnings("rawtypes")
+        ArrayList<HashMap> list = new ArrayList<HashMap>();
+        ArrayList<HashMap> list2 = new ArrayList<HashMap>();
+        HashMap<String, ArrayList> total_list = new HashMap<String,ArrayList>();
+        Statement stmt = null;
+        try {
+            Class.forName(driverName);
+            conn = DriverManager.getConnection(dbURL, userName, userPwd );
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT [boat_name]" +
+                    "      ,[boat_manager]" +
+                    "  FROM [test2].[dbo].[BoatNames]" );
+            while(rs.next()){
+                HashMap<String, String> temp = new HashMap<String,String>();
+                HashMap<String, String> temp2 = new HashMap<String,String>();
+                temp.put("boat_name", rs.getString(1));
+                temp.put("boat_manager", rs.getString(2));
+                temp2.put("id", rs.getString(1));
+                temp2.put("text", rs.getString(1));
+                list.add(temp);
+                list2.add(temp2);
+            }
+            total_list.put("name_data",list);
+            total_list.put("choice_data",list2);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            conn.close();
+        }//end finally try
+        System.out.println(Object2JasonStr(total_list));
+        return Object2JasonStr(total_list);
+    }
+
+    //读船只管理员对应船只数据
+    public static String read_boat_manager_data(String boat_manager) throws SQLException
+    {
+        Connection conn = null;
+        HashMap<String, String> boat_name = new HashMap<String,String>();
+        Statement stmt = null;
+        try {
+            Class.forName(driverName);
+            conn = DriverManager.getConnection(dbURL, userName, userPwd );
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT " +
+                    "      [boat_name]" +
+                    "  FROM [test2].[dbo].[BoatNames]" +
+                    " WHERE [boat_manager] = '"+boat_manager+"'" );
+            while(rs.next()){
+                boat_name.put("boat_name", rs.getString(1));
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            conn.close();
+        }//end finally try
+        System.out.println(Object2JasonStr(boat_name));
+        return Object2JasonStr(boat_name);
+    }
+
 	//录入名称数据
 	public static int insert_name_data(String name, String type, String creater, String creatime)
 	{
@@ -1157,6 +1235,36 @@ public class initialization {
 		return lines;
 	}
 
+    //录入船只名称数据
+    public static int insert_boat_name_data(String boat_name, String boat_manager, String creater, String creatime)
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        int lines = 0;
+        try {
+            Class.forName(driverName);
+            conn = DriverManager.getConnection(dbURL, userName, userPwd );
+            stmt = conn.createStatement();
+            lines =stmt.executeUpdate("INSERT INTO [test2].[dbo].[BoatNames] VALUES ('"+boat_name+"', '"+boat_manager+"', '"+creater+"', '"+creatime+"')");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    conn.close();
+            }catch(SQLException se){
+            }// do nothing
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }//end finally try
+        return lines;
+    }
+
 	//删除名称数据
 	public static int delete_name_data(String name, String type)
 	{
@@ -1186,6 +1294,36 @@ public class initialization {
 		}//end finally try
 		return lines;
 	}
+
+    //删除船只名称数据
+    public static int delete_boat_name_data(String boat_name, String boat_manager)
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        int lines = 0;
+        try {
+            Class.forName(driverName);
+            conn = DriverManager.getConnection(dbURL, userName, userPwd );
+            stmt = conn.createStatement();
+            lines =stmt.executeUpdate("DELETE FROM [dbo].[BoatNames] WHERE boat_name = '"+boat_name+"' AND boat_manager = '"+boat_manager+"'");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    conn.close();
+            }catch(SQLException se){
+            }// do nothing
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }//end finally try
+        return lines;
+    }
 
 	//对象能转换成JSON对象
 	public static String Object2JasonStr(Object obj) {

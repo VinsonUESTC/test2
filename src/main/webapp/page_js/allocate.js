@@ -57,7 +57,7 @@ $(function(){
 
   //确认分配触发事件
   function ClickAllocate(){
-     if($('#boat_number').textbox('getValue')!=""){
+     if($('#boat_number').combobox('getValue')!=""){
        if($('#allocate_amount_form').numberbox('getValue')!=""){
            if($('#allocate_amount_form').numberbox('getValue')-$('#allocate_boat_table').datagrid('getSelected').amount_left>0){
               alert('分配数量大于可提货数量！');
@@ -81,7 +81,7 @@ $(function(){
             {
             "allocate_order_number":$('#allocate_order_number').textbox('getValue'),
             "purchase_contract_number":$('#allocate_boat_table').datagrid('getSelected').purchase_contract_number,
-                   "boat_number":$('#boat_number').textbox('getValue'),
+                   "boat_number":$('#boat_number').combobox('getValue'),
             "allocate_amount":$('#allocate_amount_form').numberbox('getValue'),
                    "creater":document.getElementById("usertitle").innerHTML.substring(3),
                    "createtime":new Date().Format("yyyy-MM-dd hh:mm:ss") ,
@@ -99,7 +99,7 @@ $(function(){
               }
            }
      );
-     $('#boat_number').textbox('clear');
+     $('#boat_number').combobox('clear');
      $('#allocate_amount_form').numberbox('clear');
      $('#allocate_order_number').textbox('clear');
      $('#submit_allocate_alert').window('close');

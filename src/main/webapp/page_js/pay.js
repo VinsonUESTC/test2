@@ -4,14 +4,19 @@
  
 //点击付款
 function PayConfirm(type){
-		$('#pay_window_'+type).window('center');
-		$('#pay_window_'+type).window('open');
+    if ($('#payment_'+type+'_table').datagrid('getSelected')==null){
+        alert('请选择一条订单！');
+    } else {
+        $('#pay_window_' + type).window('center');
+        $('#pay_window_' + type).window('open');
+    }
 }
 //确认提交付款数据
 function ClickPay(type){
 	if($('#pay_date_'+type).datebox('getValue')!=""){
 		if($('#pay_amount_'+type).numberbox('getValue')!=""){
-			if($('#pay_amount_'+type).numberbox('getValue')<0||$('#pay_amount_'+type).numberbox('getValue')-$('#payment_'+type+'_table').datagrid('getSelected').need_to_pay>0){
+		    console.log(parseFloat($('#pay_amount_'+type).numberbox('getValue'))+parseFloat($("#"+type+"_remain").numberbox('getValue'))-parseFloat($('#payment_'+type+'_table').datagrid('getSelected').total_price));
+			if($('#pay_amount_'+type).numberbox('getValue')<0||parseFloat($('#pay_amount_'+type).numberbox('getValue'))+parseFloat($("#"+type+"_remain").numberbox('getValue'))-parseFloat($('#payment_'+type+'_table').datagrid('getSelected').total_price)>parseFloat(0)){
 				alert('金额大于待付金额！');
 				$('#submit_pay_alert_'+type).window('close');
 				$('#pay_amount_'+type).numberbox('clear');
@@ -55,13 +60,16 @@ function SubmitPay(type,name){
 			$('#pay_date_'+name).datebox('clear');
 			$('#pay_amount_'+name).numberbox('clear');
 			$('#pay_window_'+name).window('close');
-			ReadPayTable();
+            QuestPaymentOrder(name);
 		}
 	);
 }
 
 //读取带付款数据
 function QuestPaymentOrder(type){
+    if($("#payment_"+type+"_supply").combobox('getValue')==null){
+        alert('请选择供应商！');
+    }
 	$.post(
 		"ajax/pay_table_data",//请求的地址
 		{

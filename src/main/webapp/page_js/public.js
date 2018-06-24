@@ -25,6 +25,7 @@ $(function(){
 });
 //初始化订单列表
 function InitForm(){
+    InitTransportData();
     InitChoiceData();
 	//设置编号
 	hetonghao = "CGDD" + new Date().Format("yyyyMMddhhmmss");
@@ -62,4 +63,17 @@ function fmoney(value,row){
       t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");  
    }  
    return "￥"+t.split("").reverse().join("") + "." + r;  
-}  
+}
+
+//百分比显示数据
+function fpercent(value,row){
+    value = parseFloat((value + "").replace(/[^\d\.-]/g, "")).toFixed(2) + "";
+    var l = value.split(".")[0].split("").reverse(),
+        r = value.split(".")[1];
+    t = "";
+    for(i = 0; i < l.length; i ++ )
+    {
+        t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+    }
+    return t.split("").reverse().join("") + "." + r+"%";
+}
