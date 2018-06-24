@@ -4,12 +4,8 @@
  
 //点击付款
 function PayConfirm(type){
-	if($('#payment_'+type+'_table').datagrid('getSelected')==null){
-		alert('请选择一行数据！');
-	}else{
 		$('#pay_window_'+type).window('center');
 		$('#pay_window_'+type).window('open');
-	}
 }
 //确认提交付款数据
 function ClickPay(type){
@@ -38,7 +34,7 @@ function SubmitPay(type,name){
 	$.post(
 		"ajax/insert_pay_data",//请求的地址
 		{
-			"supply_co":$('#payment_'+name+'_table').datagrid('getSelected').supply_co,
+			"supply_co":$('#payment_'+name+'_supply').combobox('getValue'),
 			"payment_time":$('#pay_date_'+name).datebox('getValue'),
 			"payment_method":type,
 			"payment_amount":$('#pay_amount_'+name).numberbox('getValue'),
@@ -65,18 +61,20 @@ function SubmitPay(type,name){
 }
 
 //读取带付款数据
-function ReadPayTable(){
+function QuestPaymentOrder(type){
 	$.post(
 		"ajax/pay_table_data",//请求的地址
 		{
+			"supply_co": $("#payment_"+type+"_supply").combobox('getValue'),
+			"type" : type,
 			"randomnumber":Math.random()+""
 		},//需要提交到请求地址的参数
 		function( returnedString )     //回调
 		{
 			var data = returnedString;
 			var jsonObj = eval("("+data+")");
-			$('#payment_cash_table').datagrid('loadData',jsonObj.pay_table_data_cash);
-			$('#payment_bill_table').datagrid('loadData',jsonObj.pay_table_data_bill);
+			$("#payment_"+type+"_table").datagrid('loadData',jsonObj.payment_table_data);
+			$("#"+type+"_remain").numberbox('setValue',jsonObj.money_left)
 		}
 	);
 }

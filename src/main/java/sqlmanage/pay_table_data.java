@@ -16,18 +16,23 @@ public class pay_table_data extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	        // 设置响应内容类型
 	        response.setContentType("text/html;charset=UTF-8");
-			String pay_table_data_cash = null;
-			String pay_table_data_bill = null;
+	        String type = null;
+	        String pay_table_data = null;
+	        switch (request.getParameter("type")){
+				case "cash":
+					type = "现金";
+					break;
+				case "bill":
+					type = "承兑";
+			}
+	        String supply_co = request.getParameter("supply_co");
 			try {
-				pay_table_data_cash = initialization.read_payment_data("现金");
-				pay_table_data_bill = initialization.read_payment_data("承兑");
+				pay_table_data = initialization.read_payment_data(supply_co,type);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			String resultset = "{\"pay_table_data_cash\":"+pay_table_data_cash+
-					",\"pay_table_data_bill\":"+pay_table_data_bill+"}";
-			response.getWriter().write(resultset);
+			response.getWriter().write(pay_table_data);
 	    }
 	    
 	    // 处理 POST 方法请求的方法

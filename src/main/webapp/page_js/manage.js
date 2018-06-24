@@ -84,6 +84,8 @@ function ReadNameTable(type) {
                     $('#supply_co_form').combobox('loadData',supply_co_data);
                     $('#supply_co_delivery').combobox('loadData',supply_co_data);
                     $('#receive_co_pay').combobox('loadData',supply_co_data);
+                    $('#payment_cash_supply').combobox('loadData',supply_co_data);;
+                    $('#payment_bill_supply').combobox('loadData',supply_co_data);
                     break;
                 case "receive" :
                     var receive_co_data = jsonObj.choice_data;

@@ -55,9 +55,6 @@ String username = (String)session.getAttribute("username");
 						case 'associate_purchase_to_sale':
 							InitAssociateData();
 							break;
-						case 'payment':
-							ReadPayTable();
-							break;
 						case 'receivables':
 							ReadReceiveTable();
 							break;
@@ -362,13 +359,32 @@ String username = (String)session.getAttribute("username");
 			</header>
 			<div  class="easyui-tabs"  data-options="fit:true,border:false,pill:true,justified:true,tabWidth:80,tabHeight:35">
 				<div title="现金" style="padding:10px">
+                    <div style="text-align:center;padding:5px">
+                        <table style="width:100%;">
+                            <tr>
+                                <td>
+                                    <select id="payment_cash_supply" label="收款方：" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择收款方"  style="width:100%"></select>
+                                </td>
+                                <td rowspan="2">
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestPaymentOrder('cash')">查询</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input id="cash_remain" class="easyui-numberbox" label="当前余款：" prefix="￥" data-options="min:0,precision:2,readonly:true"style="width:100%">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 					<table id="payment_cash_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
 						<thead>
 							<tr>
-								<th field="supply_co" >供货方</th>
+								<th field="purchase_order_number" >采购订单号</th>
+                                <th field="orders_date" >采购日期</th>
+                                <th field="supply_co" >供应商</th>
 								<th field="total_price" data-options="formatter:fmoney">总金额</th>
-								<th field="total_paid"  data-options="formatter:fmoney">已经支付金额</th>
-								<th field="need_to_pay"  data-options="formatter:fmoney">剩余待付金额</th>
+								<th field="creater" >创建人</th>
+                                <th field="createtime" >创建时间</th>
 							</tr>
 						</thead>
 					</table>
@@ -396,7 +412,7 @@ String username = (String)session.getAttribute("username");
 							</div>
 					    	<div style="text-align:center;padding:5px">
 				  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickPay('cash')">确认</a>
-				  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#pay_window_cash').window('close');">关闭</a>
+				  				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#pay_window_cash').window('close')">关闭</a>
 					    	</div>
 					    </div>
 					<div id="submit_pay_alert_cash" class="easyui-window" title="提示" 
@@ -417,13 +433,30 @@ String username = (String)session.getAttribute("username");
 					    </div>
 				</div>
 				<div title="承兑" style="padding:10px">
+                    <div style="text-align:center;padding:5px">
+                        <table style="width:100%;">
+                            <tr>
+                                <td>
+                                    <select id="payment_bill_supply" label="收款方：" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择收款方"  style="width:100%"></select>
+                                </td>
+                                <td rowspan="2">
+                                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestPaymentOrder('bill')">查询</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input id="bill_remain" class="easyui-numberbox" label="当前余款：" prefix="￥" data-options="min:0,precision:2,readonly:true" style="width:100%">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 					<table id="payment_bill_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
 						<thead>
 							<tr>
-								<th field="supply_co" >供货方</th>
-								<th field="total_price" data-options="formatter:fmoney">总金额</th>
-								<th field="total_paid"  data-options="formatter:fmoney">已经支付金额</th>
-								<th field="need_to_pay"  data-options="formatter:fmoney">剩余待付金额</th>
+                                <th field="purchase_order_number" >采购订单号</th>
+                                <th field="total_price" data-options="formatter:fmoney">总金额</th>
+                                <th field="creater" >创建人</th>
+                                <th field="createtime" >创建时间</th>
 							</tr>
 						</thead>
 					</table>
@@ -828,26 +861,26 @@ String username = (String)session.getAttribute("username");
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-			<table style="border:0px;width:100%">
-				<tr>
-					<td style="width:80%;">
-						<input class="easyui-datebox" label="起始日期：" id="delivery_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
-					</td>
-					<td rowspan="3" style="text-align:center;">
-						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:30px;" onclick="QuestDeliveryAmount()">查询</a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input class="easyui-datebox" label="截止日期：" id="delivery_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<select id="supply_co_delivery" label="供货方：" id ="supply_co" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择供货方"  style="width:100%"></select>
-					</td>
-				</tr>
-			</table>
+                <table style="border:0px;width:100%">
+                    <tr>
+                        <td style="width:80%;">
+                            <input class="easyui-datebox" label="起始日期：" id="delivery_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+                        </td>
+                        <td rowspan="3" style="text-align:center;">
+                            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:30px;" onclick="QuestDeliveryAmount()">查询</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="easyui-datebox" label="截止日期：" id="delivery_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="supply_co_delivery" label="供货方：" id ="supply_co" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择供货方"  style="width:100%"></select>
+                        </td>
+                    </tr>
+                </table>
 			</div>
 			<table id="quest_delivery_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
 				<thead>

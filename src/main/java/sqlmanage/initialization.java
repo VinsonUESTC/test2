@@ -762,47 +762,65 @@ public class initialization {
 	}	
 	
 	//读取付款数据
-	public static String read_payment_data(String type) throws SQLException
+	public static String read_payment_data(String supply_co, String type) throws SQLException
 	{
 		Connection conn = null;
-		@SuppressWarnings("rawtypes")
 		ArrayList<HashMap> list = new ArrayList<HashMap>();
 		Statement stmt = null;
+		float total_used = 0;
+		float money_paid=0;
+		HashMap result = new HashMap();
 		try {  
 			Class.forName(driverName);  
 			conn = DriverManager.getConnection(dbURL, userName, userPwd );  
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT supply_co, Sum(purchase_totalprice) AS purchase_totalprice之合计"
-					+ " FROM [dbo].[Purchase_Order]"
-					+ " WHERE payment_method = '"+type+"'"
-					+ " GROUP BY supply_co;"
-					);
+			ResultSet rs = stmt.executeQuery("SELECT [purchase_contract_number]\n" +
+					"      ,[orders_date]\n" +
+					"      ,[supply_co]\n" +
+					"      ,[purchase_totalprice]\n" +
+					"      ,[payment_method]\n" +
+					"      ,[creater]\n" +
+					"      ,[create_time]\n" +
+					"  FROM [test2].[dbo].[Purchase_Order]\n" +
+					" WHERE [supply_co] = '"+supply_co+"' AND [payment_method] = '"+type+"'" +
+					"  order by create_time desc");
 			while(rs.next()){
-				float money_paid=0;
 				Statement stmt2 = conn.createStatement();
 				HashMap<String, String> temp = new HashMap<String,String>();
-				temp.put("supply_co", rs.getString(1));
-				temp.put("total_price", String.valueOf((float)(Math.round(rs.getFloat(2)*100/100))));
-				ResultSet rs2 = stmt2.executeQuery("SELECT Sum([payment_amount]) AS payment_amount之合计"
+				temp.put("purchase_order_number", rs.getString(1));
+				temp.put("orders_date", rs.getString(2));
+				temp.put("supply_co", rs.getString(3));
+				temp.put("total_price", String.valueOf((float)(Math.round(rs.getFloat(4)*100/100))));
+				temp.put("creater", rs.getString(6));
+				temp.put("createtime", rs.getString(7));
+				list.add(temp);
+			}
+			rs = stmt.executeQuery("SELECT Sum(Take_Delivery.delivery_amount) AS delivery_amount之合计, \n" +
+					"Purchase_Order.purchase_contract_number, Purchase_Order.purchase_singleprice\n" +
+					"FROM Payment, Purchase_Order INNER JOIN (Allocate_Boat INNER JOIN Take_Delivery \n" +
+					"ON Allocate_Boat.allocate_order_number = Take_Delivery.allocate_order_number) \n" +
+					"ON Purchase_Order.purchase_contract_number = Allocate_Boat.purchase_contract_number\n" +
+					"WHERE (((Purchase_Order.supply_co)='"+supply_co+"') AND Purchase_Order.payment_method = '"+type+"')\n" +
+					"GROUP BY Purchase_Order.purchase_contract_number, Purchase_Order.purchase_singleprice;\n");
+			while (rs.next()){
+				total_used+=rs.getFloat(1)*rs.getFloat(3);
+			}
+			rs = stmt.executeQuery("SELECT Sum([payment_amount]) AS payment_amount之合计"
 					+ " FROM [dbo].[Payment]"
 					+ " WHERE payment_method = '"+type+"'"
-					+ " AND supply_co = '"+rs.getString(1)+"'");
-				while(rs2.next()){
-					money_paid += rs2.getFloat(1);
-				}
-				temp.put("total_paid", String.valueOf((float)(Math.round(money_paid*100/100))));
-				temp.put("need_to_pay", String.valueOf((float)(Math.round((rs.getFloat(2)-money_paid)*100/100))));
-				if(rs.getFloat(2)-money_paid>0){
-					list.add(temp);
-				}
+					+ " AND supply_co = '"+supply_co+"'");
+			while (rs.next()) {
+				money_paid+=rs.getFloat(1);
 			}
+			result.put("money_left",String.valueOf(money_paid-total_used));
+			result.put("payment_table_data", list);
 		}catch (Exception e) {
 		e.printStackTrace();
 		}finally{
 			conn.close();
 		}//end finally try
-		System.out.println(Object2JasonStr(list));
-		return Object2JasonStr(list);
+		System.out.println(Object2JasonStr(result));
+		return Object2JasonStr(result);
 	}	
 	
 	//读取收款数据
