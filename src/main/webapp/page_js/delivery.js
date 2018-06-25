@@ -136,7 +136,7 @@ function SubmitDelivery(){
 	$('#take_delivery_window').window('close');
 }
 
-//点击提货触发事件
+//查询船号事件
 function InitTransportData() {
     $.post(
         "ajax/quest_boat_manager_data",//请求的地址
@@ -148,14 +148,17 @@ function InitTransportData() {
         {
             var data = returnedString;
             var jsonObj = eval("("+data+")");
-            console.log(jsonObj.boat_name);
-            if(jsonObj.boat_name==''||jsonObj.boat_name==undefined){
-                alert('未设置船号，请联系船经理！');
-            }else{
-                QuestTakeDelivery(jsonObj.boat_name);
-                QuestDischarge(jsonObj.boat_name);
-                $('#take_delivery_boat_number').textbox('setValue',jsonObj.boat_name);
-                $('#discharge_boat_number').textbox('setValue',jsonObj.boat_name);
+            if(window.sessionStorage.getItem("power")=="船老大") {
+                if (jsonObj.boat_name == '' || jsonObj.boat_name == undefined) {
+                    alert('未设置船号，请联系船经理！');
+                } else {
+                    QuestTakeDelivery(jsonObj.boat_name);
+                    QuestDischarge(jsonObj.boat_name);
+                    QuestDeliveryAmountHistory(jsonObj.boat_name);
+                    QuestDischargeAmountHistory(jsonObj.boat_name);
+                    $('#take_delivery_boat_number').textbox('setValue', jsonObj.boat_name);
+                    $('#discharge_boat_number').textbox('setValue', jsonObj.boat_name);
+                }
             }
         }
     );

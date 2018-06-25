@@ -2,7 +2,6 @@
 <%
 String power = (String)session.getAttribute("power");
 String username = (String)session.getAttribute("username");
-
  %>
 <html>
 	<head>
@@ -57,6 +56,18 @@ String username = (String)session.getAttribute("username");
 							break;
 						case 'receivables':
 							ReadReceiveTable();
+							break;
+						case 'take_delivery':
+							InitTransportData();
+							break;
+						case 'discharge':
+							InitTransportData();
+							break;
+						case 'take_delivery_history':
+							InitTransportData();
+							break;
+						case 'discharge_history':
+							InitTransportData();
 							break;
                     }
                 }
@@ -1201,9 +1212,10 @@ String username = (String)session.getAttribute("username");
             <table id="quest_take_delivery_history_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
                 <thead>
                 <tr>
-                    <th field="take_delivery_number">出库单号</th>
-                    <th field="take_delivery_date" >提货日期</th>
-                    <th field="take_delivery_amount">提货数量</th>
+                    <th field="take_delivery_order_number">出库单号</th>
+					<th field="supply_co" >提货单位</th>
+                    <th field="delivery_amount">提货数量</th>
+					<th field="take_delivery_date" >提货日期</th>
                 </tr>
                 </thead>
             </table>
@@ -1222,9 +1234,10 @@ String username = (String)session.getAttribute("username");
             <table id="quest_discharge_history_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
                 <thead>
                 <tr>
-                    <th field="discharge_number">入库单号</th>
-                    <th field="discharge_date" >卸货日期</th>
-                    <th field="discharge_amount">卸货数量</th>
+					<th field="discharge_order_number">入库单号</th>
+					<th field="receive_co" >卸货单位</th>
+					<th field="discharge_amount">卸货数量</th>
+					<th field="discharge_date" >卸货日期</th>
                 </tr>
                 </thead>
             </table>

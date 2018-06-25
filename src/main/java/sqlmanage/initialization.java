@@ -1073,8 +1073,76 @@ public class initialization {
 		}//end finally try
 		System.out.println(Object2JasonStr(list));
 		return Object2JasonStr(list);
-	}	
-	
+	}
+
+	//读发货历史数据
+	public static String read_delivery_data_history(String boat_number) throws SQLException
+	{
+		Connection conn = null;
+		@SuppressWarnings("rawtypes")
+		ArrayList<HashMap> list = new ArrayList<HashMap>();
+		Statement stmt = null;
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(dbURL, userName, userPwd );
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT Take_Delivery.take_delivery_order_number, Purchase_Order.supply_co, Take_Delivery.delivery_amount, Take_Delivery.take_delivery_date\n" +
+					"FROM (Take_Delivery INNER JOIN Allocate_Boat ON Take_Delivery.allocate_order_number = Allocate_Boat.allocate_order_number) INNER JOIN Purchase_Order ON " +
+					"Allocate_Boat.purchase_contract_number = Purchase_Order.purchase_contract_number\n" +
+					"WHERE (((Take_Delivery.boat_number)='"+boat_number+"')) " +
+					"ORDER BY Take_Delivery.take_delivery_date DESC;");
+			while(rs.next()){
+				HashMap<String, String> temp = new HashMap<String,String>();
+				temp.put("take_delivery_order_number", rs.getString(1));
+				temp.put("supply_co", rs.getString(2));
+				temp.put("delivery_amount", rs.getString(3));
+				temp.put("take_delivery_date", rs.getString(4));
+				list.add(temp);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}//end finally try
+		System.out.println(Object2JasonStr(list));
+		return Object2JasonStr(list);
+	}
+
+	//读发货历史数据
+	public static String read_discharge_data_history(String boat_number) throws SQLException
+	{
+		Connection conn = null;
+		@SuppressWarnings("rawtypes")
+		ArrayList<HashMap> list = new ArrayList<HashMap>();
+		Statement stmt = null;
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(dbURL, userName, userPwd );
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT Discharge.discharge_order_number, Sale_Order.receive_co, Discharge.discharge_amount, Discharge.discharge_date\n" +
+					"FROM (Sale_Associate_Purchase INNER JOIN (((Discharge INNER JOIN Take_Delivery ON Discharge.take_delivery_order_number = Take_Delivery.take_delivery_order_number) \n" +
+					"INNER JOIN Allocate_Boat ON Take_Delivery.allocate_order_number = Allocate_Boat.allocate_order_number) INNER JOIN Purchase_Order ON Allocate_Boat.purchase_contract_number = Purchase_Order.purchase_contract_number) \n" +
+					"ON Sale_Associate_Purchase.purchase_contract_number = Purchase_Order.purchase_contract_number) INNER JOIN Sale_Order ON Sale_Associate_Purchase.sale_contract_number = Sale_Order.sale_contract_number\n" +
+					"WHERE (((Discharge.boat_number)='"+boat_number+"')) " +
+					"ORDER BY Discharge.discharge_date DESC ;\n");
+			while(rs.next()){
+				HashMap<String, String> temp = new HashMap<String,String>();
+				temp.put("discharge_order_number", rs.getString(1));
+				temp.put("receive_co", rs.getString(2));
+				temp.put("discharge_amount", rs.getString(3));
+				temp.put("discharge_date", rs.getString(4));
+				list.add(temp);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}//end finally try
+		System.out.println(Object2JasonStr(list));
+		return Object2JasonStr(list);
+	}
+
+	//检查用户
 	public static String checkUser(String username,String password) throws ClassNotFoundException, SQLException{
 		Connection conn = null;
 		Statement stmt = null;

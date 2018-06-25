@@ -138,6 +138,23 @@ function QuestDeliveryAmount(){
 	}
 }
 
+//查询发货历史函数
+function QuestDeliveryAmountHistory(boat_number){
+	$.post(
+		"ajax/quest_delivery_history_data",//请求的地址
+		{
+			"boat_number":boat_number,
+			"randomnumber":Math.random()+""
+		},//需要提交到请求地址的参数
+		function( returnedString )     //回调
+		{
+			var data = returnedString;
+			var jsonObj = eval("("+data+")");
+			$('#quest_take_delivery_history_table').datagrid('loadData',jsonObj.quest_delivery_history_data);
+		}
+	);
+}
+
 //查询已卸货函数
 function QuestDischargeAmount(){
 	if($('#delivery_start_date').datebox('getValue')!=null&&$('#delivery_end_date').datebox('getValue')!=null&&$('#supply_co_delivery').combobox('getValue')!=null){
@@ -157,6 +174,23 @@ function QuestDischargeAmount(){
 			}
 		);
 	}
+}
+
+//查询卸货历史函数
+function QuestDischargeAmountHistory(boat_number){
+    $.post(
+        "ajax/quest_discharge_history_data",//请求的地址
+        {
+            "boat_number":boat_number,
+            "randomnumber":Math.random()+""
+        },//需要提交到请求地址的参数
+        function( returnedString )     //回调
+        {
+            var data = returnedString;
+            var jsonObj = eval("("+data+")");
+            $('#quest_discharge_history_table').datagrid('loadData',jsonObj.quest_discharge_history_data);
+        }
+    );
 }
 
 //查询已付款函数

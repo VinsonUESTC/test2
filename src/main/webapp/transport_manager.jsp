@@ -26,20 +26,22 @@ if(power==null){
 		<script type="text/javascript" src="page_js/delivery.js"></script>
 		<script type="text/javascript" src="page_js/associate.js"></script>
 		<script type="text/javascript" src="page_js/allocate.js"></script>
+		<script type="text/javascript" src="page_js/order.js"></script>
 		<script type="text/javascript" src="page_js/loss.js"></script>
-	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-515" data-genuitec-path="/test2/WebRoot/transport_manager.jsp">
-		<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-515" data-genuitec-path="/test2/WebRoot/transport_manager.jsp">
-	        <header>
-	            <div class="m-toolbar">
-	                <div class="m-title">主菜单</div>
-	            </div>
-	        </header>
-	        <footer>
-	        	<div class="m-toolbar">
-	                <div id="usertitle" class="m-title">你好：<%=username %></div>
-	            </div>
-	        </footer>
-	        <ul class="easyui-datalist" data-options="
+		<script type="text/javascript" src="page_js/manage.js"></script>
+	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
+	<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">主菜单</div>
+			</div>
+		</header>
+		<footer>
+			<div class="m-toolbar">
+				<div class="m-title" id="usertitle">你好：<%=username %></div>
+			</div>
+		</footer>
+		<ul class="easyui-datalist" data-options="
                 fit: true,
                 lines: true,
                 border: false,
@@ -56,11 +58,20 @@ if(power==null){
 						case 'associate_purchase_to_sale':
 							InitAssociateData();
 							break;
-						case 'payment':
-							ReadPayTable();
-							break;
 						case 'receivables':
 							ReadReceiveTable();
+							break;
+						case 'take_delivery':
+							InitTransportData();
+							break;
+						case 'discharge':
+							InitTransportData();
+							break;
+						case 'take_delivery_history':
+							InitTransportData();
+							break;
+						case 'discharge_history':
+							InitTransportData();
 							break;
                     }
                 }
@@ -68,6 +79,7 @@ if(power==null){
 	            <li value="allocate">分配船只</li>
 	            <li value="quest_allocate">查询已分配船只</li>
 	            <li value="loss">损耗查询</li>
+				<li value="insert_boat">船只新增</li>
 	        </ul>
 		</div>
 	
@@ -191,30 +203,60 @@ if(power==null){
 				</thead>
 			</table>
 		</div>
-		
+
+	<!-- 新增船只 -->
+	<div id="insert_boat"class="easyui-navpanel" style="position:relative;">
+		<header>
+			<div class="m-toolbar">
+				<div id="insert_boat_title" class="m-title"></div>
+				<div class="m-left">
+					<a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+				</div>
+			</div>
+		</header>
+		<table id="boat_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb4',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+			<thead>
+			<tr>
+				<th field="boat_name">船只名称</th>
+				<th field="boat_manager">船只管理员</th>
+			</tr>
+			</thead>
+		</table>
+		<div id="tb4" style="height:auto;">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('boat')">增加船只</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('boat')">删除船只</a>
+		</div>
+	</div>
+	<div id="insert_boat_window" class="easyui-window"
+		 data-options="
+		   			modal:true,
+		   			closed:true,
+		   			collapsible:false,
+		   			minimizable:false,
+		   			maximizable:false
+		  		" style="width:90%;height:auto;padding:0px;">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">新增船只</div>
+			</div>
+		</header>
+		<div style="margin:10px">
+			<input id="boat_name" class="easyui-textbox" label="船只名称：" prompt="请输入船只名称" data-options="required:true"  style="width:100%">
+			<input id="boat_manager" class="easyui-textbox" label="船只人员：" prompt="请输入船只人员姓名" data-options="required:true"  style="width:100%">
+		</div>
+		<div style="text-align:center;padding:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsertboat()">确认</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_boat_window').window('close');">关闭</a>
+		</div>
+	</div>
+
+
 	</body>
 	<script type="text/javascript">
-		var supply_co_data = [{
-		    "id":"泰州梅兰化工有限公司",
-		    "text":"泰州梅兰化工有限公司"
-		},{
-		    "id":"江苏大和氯碱化工有限公司",
-		    "text":"江苏大和氯碱化工有限公司"
-		},{
-		    "id":"江苏海兴化工有限公司",
-		    "text":"江苏海兴化工有限公司",
-		}];
-		var receive_co_data = [{
-		    "id":"阜宁澳洋科技股份有限公司",
-		    "text":"阜宁澳洋科技股份有限公司"
-		}];
-		var product_name_data = [{
-		    "id":"液碱（32%）",
-		    "text":"液碱（32%）"
-		}];
-		$(function(){
-			InitForm();
-			var date_month = null;
-		});
+        $(function(){
+            var user = window.sessionStorage.getItem("username");
+            InitForm();
+            var date_month = null;
+        });
 	</script>
 </html>

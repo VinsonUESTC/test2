@@ -273,4 +273,20 @@
     <servlet-name>quest_boat_manager_data</servlet-name>
     <url-pattern>/ajax/quest_boat_manager_data</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>quest_delivery_history_data</servlet-name>
+    <servlet-class>sqlmanage.quest_delivery_history_data</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>quest_delivery_history_data</servlet-name>
+    <url-pattern>/ajax/quest_delivery_history_data</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>quest_discharge_history_data</servlet-name>
+    <servlet-class>sqlmanage.quest_discharge_history_data</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>quest_discharge_history_data</servlet-name>
+    <url-pattern>/ajax/quest_discharge_history_data</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,11 +1,11 @@
 .m-toolbar{
 	position: relative;
 	text-align: center;
-	min-height: 32px;
+	min-height: 40px;
 }
 .m-toolbar .m-title{
-	line-height: 32px;
-	font-size: 16px;
+	line-height: 40px;
+	font-size: 24px;
 	font-weight: bold;
 	text-align: center;
 }
@@ -37,12 +37,6 @@
 	display: inline-block;
 	box-sizing: border-box;
 	vertical-align: top;
-	border-style: solid;
-	-webkit-transform:rotate(45deg);
-	transform:rotate(45deg);
-	width: 10px;
-	height: 10px;
-	top: 7px;
 	content: '';
 }
 .m-back::before{
