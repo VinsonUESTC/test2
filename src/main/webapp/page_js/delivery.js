@@ -138,20 +138,23 @@ function SubmitDelivery(){
 
 //查询船号事件
 function InitTransportData() {
+	var username = document.getElementById("usertitle").innerHTML.substring(3);
     $.post(
         "ajax/quest_boat_manager_data",//请求的地址
         {
-            "username":window.sessionStorage.getItem("username"),
+            "boat_manager":username,
             "randomnumber":Math.random()+""
         },//需要提交到请求地址的参数
         function( returnedString )     //回调
         {
+			var power = document.getElementById("userpower").innerHTML;
             var data = returnedString;
             var jsonObj = eval("("+data+")");
-            if(window.sessionStorage.getItem("power")=="船老大") {
-                if (jsonObj.boat_name == '' || jsonObj.boat_name == undefined) {
+			if (jsonObj.boat_name == '' || jsonObj==null) {
+				if(power=="船老大") {
                     alert('未设置船号，请联系船经理！');
-                } else {
+                } 
+            }else {
                     QuestTakeDelivery(jsonObj.boat_name);
                     QuestDischarge(jsonObj.boat_name);
                     QuestDeliveryAmountHistory(jsonObj.boat_name);
@@ -159,7 +162,6 @@ function InitTransportData() {
                     $('#take_delivery_boat_number').textbox('setValue', jsonObj.boat_name);
                     $('#discharge_boat_number').textbox('setValue', jsonObj.boat_name);
                 }
-            }
         }
     );
 }

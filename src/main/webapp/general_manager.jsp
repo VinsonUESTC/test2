@@ -40,6 +40,7 @@ if(power==null){
 			<div class="m-toolbar">
 				<div class="m-title" id="usertitle">你好：<%=username %></div>
 			</div>
+			<div style="height:0px" id="userpower"><%=power%></div>
 		</footer>
 		<ul class="easyui-datalist" data-options="
                 fit: true,
@@ -119,7 +120,7 @@ if(power==null){
 					<select id="sale_product_form"  label="产品名称："  name ="sale_product" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"   prompt="选择产品类型"  style="width:100%"></select>
 				</div>
 				<div style="margin-bottom:10px">
-					<input id="sale_amount_form" class="easyui-numberbox"  label="销售数量：" name="sale_amount" data-options="required:true"  prompt="请输入数量" style="width:100%">
+					<input id="sale_amount_form" class="easyui-numberbox"  label="销售数量：" name="sale_amount"  prompt="请输入数量" style="width:100%">
 				</div>
 				<div style="margin-bottom:10px">
 					<input id="sale_singleprice_form" class="easyui-numberbox" label="销售单价：" name="sale_singleprice" prompt="请输入单价" prefix="￥"   data-options="min:0,precision:2,required:true"  style="width:100%">
@@ -176,7 +177,7 @@ if(power==null){
 					<select id="purchase_product_form"  label="产品名称："  name ="purchase_product" class="easyui-combobox"   data-options="valueField:'id',textField:'text',required:true"  prompt="选择产品类型"  style="width:100%"></select>
 				</div>
 				<div style="margin-bottom:10px">
-					<input id="purchase_amount_form" class="easyui-numberbox"  label="采购数量：" name="purchase_amount" data-options="required:true"  prompt="请输入数量" style="width:100%">
+					<input id="purchase_amount_form" class="easyui-numberbox"  label="采购数量：" name="purchase_amount"  prompt="请输入数量" style="width:100%">
 				</div>
 				<div style="margin-bottom:10px">
 					<input id="purchase_singleprice_form" class="easyui-numberbox" label="采购单价：" name="purchase_singleprice" prompt="请输入单价" prefix="￥"   data-options="min:0,precision:2,required:true"  style="width:100%">
@@ -293,7 +294,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestPurchaseOrder()">查询</a>
 			</div>
 			<table id="quest_purchase_order_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -326,7 +327,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month2" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month2" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestsaleOrder()">查询</a>
 			</div>
 			<table id="quest_sale_order_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -358,7 +359,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month3" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month3" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestAllocate()">查询</a>
 			</div>
 			<table id="quest_allocate_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -384,7 +385,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month4" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month4" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestLoss()">查询</a>
 			</div>
 			<table id="quest_loss_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -412,7 +413,7 @@ if(power==null){
 			<table style="border:0px;width:100%">
 				<tr>
 					<td style="width:80%;">
-						<input class="easyui-datebox" label="起始日期：" id="delivery_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="起始日期：" id="delivery_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 					<td rowspan="3" style="text-align:center;">
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:30px;" onclick="QuestDeliveryAmount()">查询</a>
@@ -420,7 +421,7 @@ if(power==null){
 				</tr>
 				<tr>
 					<td>
-						<input class="easyui-datebox" label="截止日期：" id="delivery_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="截止日期：" id="delivery_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 				</tr>
 				<tr>
@@ -454,7 +455,7 @@ if(power==null){
 			<table style="border:0px;width:100%">
 				<tr>
 					<td style="width:80%;">
-						<input class="easyui-datebox" label="起始日期：" id="discharge_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="起始日期：" id="discharge_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 					<td rowspan="3" style="text-align:center;">
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:30px;" onclick="QuestDischargeAmount()">查询</a>
@@ -462,7 +463,7 @@ if(power==null){
 				</tr>
 				<tr>
 					<td>
-						<input class="easyui-datebox" label="截止日期：" id="discharge_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="截止日期：" id="discharge_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 				</tr>
 				<tr>
@@ -518,7 +519,7 @@ if(power==null){
 			</div>
 		</header>
 		<div style="margin:10px">
-			<input id="supply_name" class="easyui-textbox" label="供应商名称：" prompt="请输入供应商名称" data-options="required:true"  style="width:100%">
+			<input id="supply_name" class="easyui-textbox" label="供应商名称：" prompt="请输入供应商名称"  style="width:100%">
 		</div>
 		<div style="text-align:center;padding:5px">
 			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsert('supply')">确认</a>
@@ -563,7 +564,7 @@ if(power==null){
 			</div>
 		</header>
 		<div style="margin:10px">
-			<input id="receive_name" class="easyui-textbox" label="收货方名称：" prompt="请输入收货方名称" data-options="required:true"  style="width:100%">
+			<input id="receive_name" class="easyui-textbox" label="收货方名称：" prompt="请输入收货方名称"  style="width:100%">
 		</div>
 		<div style="text-align:center;padding:5px">
 			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsert('receive')">确认</a>
@@ -607,7 +608,7 @@ if(power==null){
 			</div>
 		</header>
 		<div style="margin:10px">
-			<input id="product_name" class="easyui-textbox" label="产品名称：" prompt="请输入产品名称" data-options="required:true"  style="width:100%">
+			<input id="product_name" class="easyui-textbox" label="产品名称：" prompt="请输入产品名称"  style="width:100%">
 		</div>
 		<div style="text-align:center;padding:5px">
 			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsert('product')">确认</a>

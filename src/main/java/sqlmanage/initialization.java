@@ -10,9 +10,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class initialization {
 
 	static String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	static String dbURL = "jdbc:sqlserver://127.0.0.1:1433;DatabaseName=test2;useunicode=true;characterEncoding=UTF-8";
+	static String dbURL = "jdbc:sqlserver://127.0.0.1:20030;DatabaseName=test2;useunicode=true;characterEncoding=UTF-8";
 	static String userName = "test";
-	static String userPwd = "jyf123456";
+	static String userPwd = "1qazXSW@3edcVFR$";
 	public static void main(String[] args) throws SQLException {
 		ClearDataBase();
 		InitDataBase();
@@ -456,7 +456,7 @@ public class initialization {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT purchase_contract_number, supply_co, purchase_amount "
 					+ "FROM  [dbo].[Purchase_Order] WHERE product_name= '"+product_name+"' AND purchase_amount <= "+sale_amount
-					+" AND purchase_contract_number not in (select purchase_contract_number from [dbo].[Sale_Associate_Purchase])");
+					+"+200 AND purchase_contract_number not in (select purchase_contract_number from [dbo].[Sale_Associate_Purchase])");
 			while(rs.next()){
 				HashMap<String, String> temp = new HashMap<String,String>();
 				temp.put("purchase_contract_number", rs.getString(1));
@@ -964,7 +964,7 @@ public class initialization {
 				}
 				temp.put("amount_left", String.valueOf(amount_left));
 				//temp.put("money_left", String.valueOf((float)(Math.round(money_left*100/100))));
-				if(amount_left>0){
+				if(amount_left>=50){
 					list.add(temp);
 				}
 			}

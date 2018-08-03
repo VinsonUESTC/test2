@@ -20,14 +20,9 @@ if(power==null){
 		<script type="text/javascript" src="resource/jquery-easyui-1.5.3/jquery.easyui.mobile.js"></script>
 		<script type="text/javascript" src="resource/jquery-easyui-1.5.3/locale/easyui-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="page_js/public.js"></script>
-		<script type="text/javascript" src="page_js/receive.js"></script>
 		<script type="text/javascript" src="page_js/pay.js"></script>
 		<script type="text/javascript" src="page_js/quest.js"></script>
 		<script type="text/javascript" src="page_js/delivery.js"></script>
-		<script type="text/javascript" src="page_js/associate.js"></script>
-		<script type="text/javascript" src="page_js/allocate.js"></script>
-		<script type="text/javascript" src="page_js/order.js"></script>
-		<script type="text/javascript" src="page_js/loss.js"></script>
 		<script type="text/javascript" src="page_js/manage.js"></script>
 	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
 	<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
@@ -40,6 +35,7 @@ if(power==null){
 			<div class="m-toolbar">
 				<div class="m-title" id="usertitle">你好：<%=username %></div>
 			</div>
+			<div style="height:0px" id="userpower"><%=power%></div>
 		</footer>
 		<ul class="easyui-datalist" data-options="
                 fit: true,
@@ -93,7 +89,7 @@ if(power==null){
 						</tr>
 					</table>
 				</div>
-				<table id="payment_cash_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+				<table id="payment_cash_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:60%;"  rownumbers="true" pagination="true">
 					<thead>
 					<tr>
 						<th field="purchase_order_number" >采购订单号</th>
@@ -167,7 +163,7 @@ if(power==null){
 						</tr>
 					</table>
 				</div>
-				<table id="payment_bill_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+				<table id="payment_bill_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:60%;"  rownumbers="true" pagination="true">
 					<thead>
 					<tr>
 						<th field="purchase_order_number" >采购订单号</th>
@@ -311,7 +307,7 @@ if(power==null){
 			<table style="border:0px;width:100%">
 				<tr>
 					<td style="width:80%;">
-						<input class="easyui-datebox" label="起始日期：" id="pay_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="起始日期：" id="pay_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 					<td rowspan="3" style="text-align:center;">
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:30px;" onclick="QuestPayTable()">查询</a>
@@ -319,7 +315,7 @@ if(power==null){
 				</tr>
 				<tr>
 					<td>
-						<input class="easyui-datebox" label="截止日期：" id="pay_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="截止日期：" id="pay_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 				</tr>
 				<tr>
@@ -354,7 +350,7 @@ if(power==null){
 			<table style="border:0px;width:100%">
 				<tr>
 					<td style="width:80%;">
-						<input class="easyui-datebox" label="起始日期：" id="receive_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="起始日期：" id="receive_start_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 					<td rowspan="3" style="text-align:center;">
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:30px;" onclick="QuestReceiveTable()">查询</a>
@@ -362,7 +358,7 @@ if(power==null){
 				</tr>
 				<tr>
 					<td>
-						<input class="easyui-datebox" label="截止日期：" id="receive_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  data-options="required:true" style="width:100%;">
+						<input class="easyui-datebox" label="截止日期：" id="receive_end_date"  prompt="请输入日期" data-options="required:true,editable:false,panelWidth:220,panelHeight:240,iconWidth:30"  style="width:100%;">
 					</td>
 				</tr>
 				<tr>

@@ -16,8 +16,8 @@ function ClickPay(type){
 	if($('#pay_date_'+type).datebox('getValue')!=""){
 		if($('#pay_amount_'+type).numberbox('getValue')!=""){
 		    console.log(parseFloat($('#pay_amount_'+type).numberbox('getValue'))+parseFloat($("#"+type+"_remain").numberbox('getValue'))-parseFloat($('#payment_'+type+'_table').datagrid('getSelected').total_price));
-			if($('#pay_amount_'+type).numberbox('getValue')<0||parseFloat($('#pay_amount_'+type).numberbox('getValue'))+parseFloat($("#"+type+"_remain").numberbox('getValue'))-parseFloat($('#payment_'+type+'_table').datagrid('getSelected').total_price)>parseFloat(0)){
-				alert('金额大于待付金额！');
+			if($('#pay_amount_'+type).numberbox('getValue')<0){
+				alert('金额小于0！');
 				$('#submit_pay_alert_'+type).window('close');
 				$('#pay_amount_'+type).numberbox('clear');
 			}else{

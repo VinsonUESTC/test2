@@ -28,20 +28,22 @@ if(power==null){
 		<script type="text/javascript" src="page_js/allocate.js"></script>
 		<script type="text/javascript" src="page_js/order.js"></script>
 		<script type="text/javascript" src="page_js/loss.js"></script>
-		<script type="text/javascript" src="page_js/manage.js"></script>
-	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
-	<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
-		<header>
-			<div class="m-toolbar">
-				<div class="m-title">主菜单</div>
-			</div>
-		</header>
-		<footer>
-			<div class="m-toolbar">
-				<div class="m-title" id="usertitle">你好：<%=username %></div>
-			</div>
-		</footer>
-		<ul class="easyui-datalist" data-options="
+        <script type="text/javascript" src="page_js/manage.js"></script>
+	<body>
+	<body>
+		<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
+	        <header>
+	            <div class="m-toolbar">
+	                <div class="m-title">主菜单</div>
+	            </div>
+	        </header>
+	        <footer>
+	        	<div class="m-toolbar">
+	                <div class="m-title" id="usertitle">你好：<%=username %></div>
+	            </div>
+				<div style="height:0px" id="userpower"><%=power%></div>
+	        </footer>
+	        <ul class="easyui-datalist" data-options="
                 fit: true,
                 lines: true,
                 border: false,
@@ -125,7 +127,7 @@ if(power==null){
 					<input class="easyui-textbox" label="分配单号：" id="allocate_order_number" data-options="readonly:true" style="width:100%">
 				</div>
 	  			<div style="margin:10px">
-					<input class="easyui-textbox" label="船号：" id="boat_number"  prompt="请输入船号" data-options="required:true" style="width:100%">
+                    <select class="easyui-combobox" label="船号：" id="boat_number"  prompt="请选择船号" data-options="valueField:'id',textField:'text',required:true" style="width:100%"></select>
 				</div>
 				<div style="margin:10px">
 					<input id="allocate_amount_form" class="easyui-numberbox" label="分配数量：" prompt="请输入数量" data-options="min:0,precision:0,required:true"  style="width:100%">
@@ -164,7 +166,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month3" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month3" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestAllocate()">查询</a>
 			</div>
 			<table id="quest_allocate_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -190,7 +192,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month4" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month4" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestLoss()">查询</a>
 			</div>
 			<table id="quest_loss_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -198,57 +200,57 @@ if(power==null){
 					<tr>
 						<th field="boat_number" >船号</th>
 						<th field="loss_amount" >损耗数量</th>
-						<th field="loss_rate" >损耗比例</th>
+						<th field="loss_rate" data-options="formatter:fpercent">损耗比例</th>
 					</tr>
 				</thead>
 			</table>
 		</div>
 
 	<!-- 新增船只 -->
-	<div id="insert_boat"class="easyui-navpanel" style="position:relative;">
-		<header>
-			<div class="m-toolbar">
-				<div id="insert_boat_title" class="m-title"></div>
-				<div class="m-left">
-					<a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
-				</div>
-			</div>
-		</header>
-		<table id="boat_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb4',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
-			<thead>
-			<tr>
-				<th field="boat_name">船只名称</th>
-				<th field="boat_manager">船只管理员</th>
-			</tr>
-			</thead>
-		</table>
-		<div id="tb4" style="height:auto;">
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('boat')">增加船只</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('boat')">删除船只</a>
-		</div>
-	</div>
-	<div id="insert_boat_window" class="easyui-window"
-		 data-options="
+        <div id="insert_boat"class="easyui-navpanel" style="position:relative;">
+            <header>
+                <div class="m-toolbar">
+                    <div id="insert_boat_title" class="m-title"></div>
+                    <div class="m-left">
+                        <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px" onclick="$.mobile.go('#main_page','slide','right')">返回</a>
+                    </div>
+                </div>
+            </header>
+            <table id="boat_name_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,toolbar: '#tb4',fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
+                <thead>
+                <tr>
+                    <th field="boat_name">船只名称</th>
+                    <th field="boat_manager">船只管理员</th>
+                </tr>
+                </thead>
+            </table>
+            <div id="tb4" style="height:auto;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('boat')">增加船只</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="remove('boat')">删除船只</a>
+            </div>
+        </div>
+        <div id="insert_boat_window" class="easyui-window"
+             data-options="
 		   			modal:true,
 		   			closed:true,
 		   			collapsible:false,
 		   			minimizable:false,
 		   			maximizable:false
 		  		" style="width:90%;height:auto;padding:0px;">
-		<header>
-			<div class="m-toolbar">
-				<div class="m-title">新增船只</div>
-			</div>
-		</header>
-		<div style="margin:10px">
-			<input id="boat_name" class="easyui-textbox" label="船只名称：" prompt="请输入船只名称" data-options="required:true"  style="width:100%">
-			<input id="boat_manager" class="easyui-textbox" label="船只人员：" prompt="请输入船只人员姓名" data-options="required:true"  style="width:100%">
-		</div>
-		<div style="text-align:center;padding:5px">
-			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsertboat()">确认</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_boat_window').window('close');">关闭</a>
-		</div>
-	</div>
+            <header>
+                <div class="m-toolbar">
+                    <div class="m-title">新增船只</div>
+                </div>
+            </header>
+            <div style="margin:10px">
+                <input id="boat_name" class="easyui-textbox" label="船只名称：" prompt="请输入船只名称"  style="width:100%">
+                <input id="boat_manager" class="easyui-textbox" label="船只人员：" prompt="请输入船只人员姓名"  style="width:100%">
+            </div>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="ClickInsertboat()">确认</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="$('#insert_boat_window').window('close');">关闭</a>
+            </div>
+        </div>
 
 
 	</body>

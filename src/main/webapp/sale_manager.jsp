@@ -20,24 +20,24 @@ if(power==null){
 		<script type="text/javascript" src="resource/jquery-easyui-1.5.3/jquery.easyui.mobile.js"></script>
 		<script type="text/javascript" src="resource/jquery-easyui-1.5.3/locale/easyui-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="page_js/public.js"></script>
-		<script type="text/javascript" src="page_js/receive.js"></script>
-		<script type="text/javascript" src="page_js/pay.js"></script>
 		<script type="text/javascript" src="page_js/quest.js"></script>
 		<script type="text/javascript" src="page_js/delivery.js"></script>
 		<script type="text/javascript" src="page_js/order.js"></script>
-	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-514" data-genuitec-path="/test2/WebRoot/sale_manager.jsp">
-		<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-514" data-genuitec-path="/test2/WebRoot/sale_manager.jsp">
-	        <header>
-	            <div class="m-toolbar">
-	                <div class="m-title">主菜单</div>
-	            </div>
-	        </header>
-	        <footer>
-	        	<div class="m-toolbar">
-	                <div id="usertitle" class="m-title">你好：<%=username %></div>
-	            </div>
-	        </footer>
-	        <ul class="easyui-datalist" data-options="
+		<script type="text/javascript" src="page_js/manage.js"></script>
+	<body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
+	<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">主菜单</div>
+			</div>
+		</header>
+		<footer>
+			<div class="m-toolbar">
+				<div class="m-title" id="usertitle">你好：<%=username %></div>
+			</div>
+			<div style="height:0px" id="userpower"><%=power%></div>
+		</footer>
+		<ul class="easyui-datalist" data-options="
                 fit: true,
                 lines: true,
                 border: false,
@@ -54,11 +54,20 @@ if(power==null){
 						case 'associate_purchase_to_sale':
 							InitAssociateData();
 							break;
-						case 'payment':
-							ReadPayTable();
-							break;
 						case 'receivables':
 							ReadReceiveTable();
+							break;
+						case 'take_delivery':
+							InitTransportData();
+							break;
+						case 'discharge':
+							InitTransportData();
+							break;
+						case 'take_delivery_history':
+							InitTransportData();
+							break;
+						case 'discharge_history':
+							InitTransportData();
 							break;
                     }
                 }
@@ -67,7 +76,9 @@ if(power==null){
 	            <li value="quest_sale_order">查询已有销售单</li>
 	        </ul>
 		</div>
-		
+	
+
+	    
 	    <!-- 采购单查询 -->
 		<div id="quest_purchase_order"class="easyui-navpanel" style="position:relative;">
 			<header>
@@ -79,7 +90,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestPurchaseOrder()">查询</a>
 			</div>
 			<table id="quest_purchase_order_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -112,7 +123,7 @@ if(power==null){
 				</div>
 			</header>
 			<div style="text-align:center;padding:5px">
-				<input class="date-month2" label="选择月份：" data-options="required:true" style="width:70%;">
+				<input class="date-month2" label="选择月份：" style="width:70%;">
 				<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:32px" onclick="QuestsaleOrder()">查询</a>
 			</div>
 			<table id="quest_sale_order_table" class="easyui-datagrid" data-options="singleSelect:true,border:false,fitColumns:true"  style="width:100%;height:80%;"  rownumbers="true" pagination="true">
@@ -131,30 +142,15 @@ if(power==null){
 				</thead>
 			</table>
 		</div>
+
+
 		
 	</body>
 	<script type="text/javascript">
-		var supply_co_data = [{
-		    "id":"泰州梅兰化工有限公司",
-		    "text":"泰州梅兰化工有限公司"
-		},{
-		    "id":"江苏大和氯碱化工有限公司",
-		    "text":"江苏大和氯碱化工有限公司"
-		},{
-		    "id":"江苏海兴化工有限公司",
-		    "text":"江苏海兴化工有限公司",
-		}];
-		var receive_co_data = [{
-		    "id":"阜宁澳洋科技股份有限公司",
-		    "text":"阜宁澳洋科技股份有限公司"
-		}];
-		var product_name_data = [{
-		    "id":"液碱（32%）",
-		    "text":"液碱（32%）"
-		}];
-		$(function(){
-			InitForm();
-			var date_month = null;
-		});
+        $(function(){
+            var user = window.sessionStorage.getItem("username");
+            InitForm();
+            var date_month = null;
+        });
 	</script>
 </html>

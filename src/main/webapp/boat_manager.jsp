@@ -24,10 +24,6 @@ if(power==null){
 	<script type="text/javascript" src="page_js/pay.js"></script>
 	<script type="text/javascript" src="page_js/quest.js"></script>
 	<script type="text/javascript" src="page_js/delivery.js"></script>
-	<script type="text/javascript" src="page_js/associate.js"></script>
-	<script type="text/javascript" src="page_js/allocate.js"></script>
-	<script type="text/javascript" src="page_js/order.js"></script>
-	<script type="text/javascript" src="page_js/loss.js"></script>
 	<script type="text/javascript" src="page_js/manage.js"></script>
 <body data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
 	<div id="main_page" class="easyui-navpanel" data-genuitec-lp-enabled="false" data-genuitec-file-id="wc1-3" data-genuitec-path="/test2/WebRoot/index.jsp">
@@ -40,6 +36,7 @@ if(power==null){
 			<div class="m-toolbar">
 				<div class="m-title" id="usertitle">你好：<%=username %></div>
 			</div>
+			<div style="height:0px" id="userpower"><%=power%></div>
 		</footer>
 		<ul class="easyui-datalist" data-options="
 					fit: true,
@@ -115,7 +112,7 @@ if(power==null){
 				<input class="easyui-textbox" label="船号：" id="take_delivery_boat_number"  prompt="请输入船号" data-options="readonly:true" style="width:100%">
 			</div>
 			<div style="margin:10px">
-				<input class="easyui-textbox" label="出库单号："  prompt="请输入出库单号"  id="take_delivery_order_number" data-options="required:true" style="width:100%">
+				<input class="easyui-textbox" label="出库单号："  prompt="请输入出库单号"  id="take_delivery_order_number" style="width:100%">
 			</div>
 			<div style="margin:10px">
 				<input class="easyui-datebox" label="提货日期：" id="take_delivery_date"  data-options="readonly:true" style="width:100%">
@@ -187,7 +184,7 @@ if(power==null){
 				<input class="easyui-textbox" label="船号：" id="discharge_boat_number"  prompt="请输入船号" data-options="readonly:true" style="width:100%">
 			</div>
 			<div style="margin:10px">
-				<input class="easyui-textbox" label="入库单号："  prompt="请输入入库单号"  id="discharge_order_number" data-options="required:true" style="width:100%">
+				<input class="easyui-textbox" label="入库单号："  prompt="请输入入库单号"  id="discharge_order_number" style="width:100%">
 			</div>
 			<div style="margin:10px">
 				<input class="easyui-datebox" label="卸货日期：" id="discharge_date"  prompt="请选择卸货日期" data-options="readonly:true" style="width:100%">
